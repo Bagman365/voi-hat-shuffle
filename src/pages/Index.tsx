@@ -92,16 +92,33 @@ const Index = () => {
       {/* Header */}
       <header className="pt-6 pb-8 px-4 text-center">
         <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-[#9b87f5] to-[#D946EF] text-transparent bg-clip-text mb-2">
-          VOI Shell Game
+          VOI Hat Monte
         </h1>
         <p className="text-gray-400 max-w-md mx-auto">
           Find the ball under the hat and win VOI tokens!
         </p>
       </header>
       
-      {/* Game container */}
+      {/* Main content - Game Board First */}
       <main className="flex-1 container mx-auto px-4 flex flex-col">
-        {/* Status row */}
+        {/* Game board */}
+        <div className="flex-1 flex items-center justify-center relative overflow-hidden mb-6">
+          {/* Galaxy background effect */}
+          <div className="absolute inset-0 overflow-hidden">
+            <div className="stars-bg"></div>
+          </div>
+          
+          <div className="relative z-10 w-full">
+            <GameBoard 
+              isPlaying={isPlaying} 
+              shuffleSpeed={shuffleSpeed}
+              onGameComplete={handleGameComplete}
+              wagerAmount={wagerAmount}
+            />
+          </div>
+        </div>
+        
+        {/* Controls and status panels moved below */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
           <StatusPanel wins={wins} streak={streak} />
           <ControlsPanel 
@@ -118,23 +135,6 @@ const Index = () => {
             address={walletAddress}
             onConnect={handleConnectWallet}
           />
-        </div>
-        
-        {/* Game board */}
-        <div className="flex-1 flex items-center justify-center relative overflow-hidden">
-          {/* Galaxy background effect */}
-          <div className="absolute inset-0 overflow-hidden">
-            <div className="stars-bg"></div>
-          </div>
-          
-          <div className="relative z-10 w-full">
-            <GameBoard 
-              isPlaying={isPlaying} 
-              shuffleSpeed={shuffleSpeed}
-              onGameComplete={handleGameComplete}
-              wagerAmount={wagerAmount}
-            />
-          </div>
         </div>
       </main>
       

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Hat from './Hat';
@@ -19,9 +18,9 @@ const GameBoard: React.FC<GameBoardProps> = ({
 }) => {
   const [ballPosition, setBallPosition] = useState<number>(0);
   const [hatPositions, setHatPositions] = useState<Array<{x: number, y: number}>>([
-    { x: -220, y: 0 }, // Adjusted x positions for wider spacing
+    { x: -250, y: 0 }, // Further increased spacing
     { x: 0, y: 0 }, 
-    { x: 220, y: 0 }   // Adjusted x positions for wider spacing
+    { x: 250, y: 0 }   // Further increased spacing
   ]);
   const [isShuffling, setIsShuffling] = useState<boolean>(false);
   const [selectedHat, setSelectedHat] = useState<number | null>(null);
@@ -54,11 +53,11 @@ const GameBoard: React.FC<GameBoardProps> = ({
     const randomPosition = Math.floor(Math.random() * 3);
     setBallPosition(randomPosition);
     
-    // Reset hat positions
+    // Reset hat positions with wider spacing
     setHatPositions([
-      { x: -220, y: 0 }, // Adjusted x positions for wider spacing
+      { x: -250, y: 0 }, // Further increased spacing
       { x: 0, y: 0 }, 
-      { x: 220, y: 0 }   // Adjusted x positions for wider spacing
+      { x: 250, y: 0 }   // Further increased spacing
     ]);
     
     // Start shuffling after a brief delay
@@ -129,10 +128,10 @@ const GameBoard: React.FC<GameBoardProps> = ({
   };
   
   return (
-    <div className="relative w-full h-[400px] flex items-center justify-center">
+    <div className="relative w-full h-[500px] flex items-center justify-center">
       {/* Game area */}
       <motion.div 
-        className="relative w-[700px] h-[300px]"
+        className="relative w-full max-w-[800px] h-[400px]"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
