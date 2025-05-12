@@ -24,10 +24,10 @@ const Hat: React.FC<HatProps> = ({
 }) => {
   const isMobile = useIsMobile();
   
-  // Calculate size based on screen size
+  // Calculate size based on screen size - increased by approximately 30%
   const hatSize = isMobile ? 
-    (window.innerWidth < 400 ? 160 : 200) : // Reduced hat size on mobile (~40% reduction)
-    390; // Original size on desktop
+    (window.innerWidth < 400 ? 160 : 200) : // Increased from ~120 to 160 for very small screens, and 150 to 200 for regular mobile
+    390; // Increased from 300 to 390 for desktop
   
   return (
     <motion.div
