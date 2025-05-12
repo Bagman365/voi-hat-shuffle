@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -126,6 +127,33 @@
     }
     p {
       font-size: 0.95rem;
+    }
+    
+    /* Enhanced mobile hat layout */
+    .hat-container {
+      gap: 1.25rem;
+      padding: 1rem;
+    }
+
+    .hat-grid-triangular {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto auto;
+      gap: 1.25rem;
+      place-items: center;
+    }
+    
+    .hat-grid-triangular > div:last-child {
+      grid-column: span 2;
+      margin-top: 0.75rem;
+    }
+    
+    .hat-stack-vertical {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      align-items: center;
+      justify-content: center;
     }
   }
 }

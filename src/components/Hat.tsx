@@ -10,6 +10,7 @@ interface HatProps {
   isRevealed: boolean;
   onSelect: (id: number) => void;
   isSelectable: boolean;
+  animationDelay?: number;
 }
 
 const Hat: React.FC<HatProps> = ({ 
@@ -18,25 +19,35 @@ const Hat: React.FC<HatProps> = ({
   hasBall, 
   isRevealed, 
   onSelect,
-  isSelectable
+  isSelectable,
+  animationDelay = 0
 }) => {
   const isMobile = useIsMobile();
   
   // Calculate size based on screen size
-  const hatSize = isMobile ? 310 : 390; // 20% smaller on mobile
+  const hatSize = isMobile ? 
+    (window.innerWidth < 400 ? 220 : 260) : // Smaller hats on mobile
+    390; // Original size on desktop
   
   return (
     <motion.div
       className={`absolute cursor-pointer transition-transform duration-300 transform ${
         isSelectable ? 'hover:scale-110' : ''
       }`}
-      initial={{ scale: 1, y: 0 }}
+      initial={{ scale: 0, opacity: 0 }}
       animate={{ 
         x: position.x, 
-        y: isRevealed ? -90 : position.y,
+        y: isRevealed ? -70 : position.y,
         scale: isRevealed ? (isMobile ? 0.8 : 0.9) : 1,
+        opacity: 1
       }}
-      transition={{ duration: 0.4 }}
+      transition={{ 
+        duration: 0.5, 
+        delay: animationDelay,
+        type: "spring",
+        stiffness: 260,
+        damping: 20
+      }}
       onClick={() => isSelectable && onSelect(id)}
       whileHover={isSelectable && !isMobile ? { scale: 1.12, y: -15, rotateX: 5, rotateY: 5, z: 10 } : {}}
       style={{
@@ -53,7 +64,7 @@ const Hat: React.FC<HatProps> = ({
         className="w-full h-full flex items-center justify-center"
         animate={{ 
           rotateX: isRevealed ? 60 : 0, 
-          y: isRevealed ? -80 : 0,
+          y: isRevealed ? -60 : 0,
           z: isRevealed ? 40 : 0
         }}
         transition={{ 
@@ -94,8 +105,8 @@ const Hat: React.FC<HatProps> = ({
             damping: 20
           }}
         >
-          <div className={`${isMobile ? 'w-[100px] h-[100px]' : 'w-[130px] h-[130px]'} bg-[#D946EF] rounded-full shadow-lg flex items-center justify-center`}>
-            <div className={`${isMobile ? 'w-[90px] h-[90px]' : 'w-[120px] h-[120px]'} bg-[#D946EF] rounded-full shadow-inner glow-effect`}></div>
+          <div className={`${isMobile ? 'w-[80px] h-[80px]' : 'w-[130px] h-[130px]'} bg-[#D946EF] rounded-full shadow-lg flex items-center justify-center`}>
+            <div className={`${isMobile ? 'w-[70px] h-[70px]' : 'w-[120px] h-[120px]'} bg-[#D946EF] rounded-full shadow-inner glow-effect`}></div>
           </div>
         </motion.div>
       )}

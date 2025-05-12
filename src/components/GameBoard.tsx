@@ -30,20 +30,20 @@ const GameBoard: React.FC<GameBoardProps> = ({
   // Calculate hat spacing based on screen size
   useEffect(() => {
     if (isMobile) {
-      // Mobile: Stack hats vertically or in compact grid
+      // Mobile: Vertical layout for very small screens, triangular for slightly larger
       if (window.innerWidth < 400) {
-        // Extra small screens, stack vertically
+        // Extra small screens: vertical stack
         setHatPositions([
           { x: 0, y: -180 },  // Top hat position
           { x: 0, y: 0 },     // Middle hat position
           { x: 0, y: 180 }    // Bottom hat position
         ]);
       } else {
-        // Small screens, triangular layout
+        // Small screens: triangular layout
         setHatPositions([
-          { x: -120, y: -50 },  // Top left hat position
-          { x: 120, y: -50 },   // Top right hat position 
-          { x: 0, y: 120 }      // Bottom center hat position
+          { x: -100, y: -80 },  // Top left hat position
+          { x: 100, y: -80 },   // Top right hat position 
+          { x: 0, y: 80 }      // Bottom center hat position
         ]);
       }
     } else {
@@ -176,7 +176,7 @@ const GameBoard: React.FC<GameBoardProps> = ({
   };
   
   return (
-    <div className={`relative w-full ${isMobile ? 'h-[750px]' : 'h-[650px]'} flex items-center justify-center`}>
+    <div className={`relative w-full ${isMobile ? 'h-[600px]' : 'h-[650px]'} flex items-center justify-center`}>
       {/* Game area */}
       <motion.div 
         className="relative w-full max-w-[1200px] h-full flex items-center justify-center"
@@ -196,6 +196,7 @@ const GameBoard: React.FC<GameBoardProps> = ({
                 isRevealed={revealedHat === hatId}
                 onSelect={handleHatSelect}
                 isSelectable={!isShuffling && selectedHat === null && !isPlaying}
+                animationDelay={isMobile ? hatId * 0.2 : 0} // Sequential animation delays on mobile
               />
             ))}
           </div>
