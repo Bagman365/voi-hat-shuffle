@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Hat from './Hat';
@@ -40,8 +41,8 @@ const GameBoard: React.FC<GameBoardProps> = ({
         { x: 0, y: bottomRowY }                 // Bottom center hat position
       ]);
     } else {
-      // Desktop: Horizontal layout with more space for larger hats
-      const spacing = 560; // Increased from 490 to accommodate larger hats
+      // Desktop: Horizontal layout with more space for larger hats (125% increase)
+      const spacing = 700; // Increased from 560 to accommodate 125% larger hats
       setHatPositions([
         { x: -spacing, y: 0 },  // Left hat position
         { x: 0, y: 0 },         // Center hat position
@@ -88,7 +89,7 @@ const GameBoard: React.FC<GameBoardProps> = ({
         { x: 0, y: bottomRowY }                 // Bottom center
       ]);
     } else {
-      const spacing = 560; // Increased spacing
+      const spacing = 700; // Increased spacing for 125% larger hats
       setHatPositions([
         { x: -spacing, y: 0 },
         { x: 0, y: 0 },
@@ -179,7 +180,7 @@ const GameBoard: React.FC<GameBoardProps> = ({
               <Hat 
                 key={hatId}
                 id={hatId}
-                position={hatPositions[hatId] || { x: (hatId - 1) * 560, y: 0 }}
+                position={hatPositions[hatId] || { x: (hatId - 1) * 700, y: 0 }}
                 hasBall={hatId === ballPosition}
                 isRevealed={revealedHat === hatId}
                 onSelect={handleHatSelect}
