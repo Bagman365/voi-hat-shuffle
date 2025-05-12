@@ -34,8 +34,8 @@ const Hat: React.FC<HatProps> = ({
       onClick={() => isSelectable && onSelect(id)}
       whileHover={isSelectable ? { scale: 1.1, y: -10 } : {}}
       style={{
-        width: '380px',
-        height: '380px',
+        width: '380px',  // Increased from 300px (approximately 27% larger)
+        height: '380px', // Increased from 300px (approximately 27% larger)
         position: 'absolute',
         transform: 'translate(-50%, -50%)',
       }}
@@ -51,16 +51,11 @@ const Hat: React.FC<HatProps> = ({
           <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-[320px] h-[75px] bg-[#9b87f5] dark:bg-[#33C3F0] rounded-full shadow-lg"></div>
           
           {/* Hat Top */}
-          <div className="absolute bottom-[70px] left-1/2 transform -translate-x-1/2 w-[280px] h-[210px] bg-[#1A1F2C] rounded-t-[180px] shadow-inner">
-            {/* VOI Logo on Hat - Centered in the hat */}
-            <div className="absolute w-full flex justify-center items-center" style={{ top: '50%', transform: 'translateY(-50%)' }}>
-              <img 
-                src="/lovable-uploads/43a72a10-c405-466c-afee-171318153c5c.png"
-                alt="VOI Logo"
-                className="w-[120px] h-auto object-contain"
-                style={{ filter: 'brightness(1.2)' }}
-              />
-            </div>
+          <div className="absolute bottom-[70px] left-1/2 transform -translate-x-1/2 w-[280px] h-[210px] bg-[#1A1F2C] rounded-t-[180px] shadow-inner"></div>
+          
+          {/* VOI Logo on Hat */}
+          <div className="absolute bottom-[140px] left-1/2 transform -translate-x-1/2 text-white font-bold text-center text-3xl">
+            VOI
           </div>
         </div>
       </motion.div>
