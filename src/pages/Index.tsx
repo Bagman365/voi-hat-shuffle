@@ -120,21 +120,12 @@ const Index = () => {
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-[#1A1F2C] to-[#0f1218]">
       {/* Header with wallet button in top right */}
-      <header className="pt-8 pb-6 px-6 flex items-center justify-between">
-        <div className="flex-1">
-          {/* Empty div for flex spacing */}
-        </div>
+      <header className="pt-8 pb-6 px-6 md:px-8 flex flex-col md:flex-row items-center justify-between">
+        <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-[#9b87f5] to-[#D946EF] text-transparent bg-clip-text mb-2 md:mb-0">
+          VOI HAT MONTE
+        </h1>
         
-        <div className="flex-1 text-center">
-          <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-[#9b87f5] to-[#D946EF] text-transparent bg-clip-text mb-2">
-            VOI HAT MONTE
-          </h1>
-          <p className="text-lg md:text-xl text-gray-400 max-w-md mx-auto">
-            Find the ball under the hat and win $VOI
-          </p>
-        </div>
-        
-        <div className="flex-1 flex justify-end items-start">
+        <div className="mt-4 md:mt-0">
           <WalletPanel 
             isConnected={walletConnected}
             balance={balance}
@@ -143,6 +134,13 @@ const Index = () => {
           />
         </div>
       </header>
+      
+      {/* Game description */}
+      <div className="text-center mb-6">
+        <p className="text-lg md:text-xl text-gray-400 max-w-md mx-auto">
+          Find the ball under the hat and win $VOI
+        </p>
+      </div>
       
       {/* Main content - Game Board First */}
       <main className="flex-1 container mx-auto px-4 flex flex-col">
