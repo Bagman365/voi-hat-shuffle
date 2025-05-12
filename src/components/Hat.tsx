@@ -24,11 +24,6 @@ const Hat: React.FC<HatProps> = ({
 }) => {
   const isMobile = useIsMobile();
   
-  // Calculate size based on screen size - increased by approximately 30%
-  const hatSize = isMobile ? 
-    (window.innerWidth < 400 ? 160 : 200) : // Increased from ~120 to 160 for very small screens, and 150 to 200 for regular mobile
-    390; // Increased from 300 to 390 for desktop
-  
   return (
     <motion.div
       className={`absolute cursor-pointer transition-transform duration-300 transform ${
@@ -51,8 +46,8 @@ const Hat: React.FC<HatProps> = ({
       onClick={() => isSelectable && onSelect(id)}
       whileHover={isSelectable && !isMobile ? { scale: 1.12, y: -15, rotateX: 5, rotateY: 5, z: 10 } : {}}
       style={{
-        width: `${hatSize}px`,
-        height: `${hatSize}px`,
+        width: isMobile ? 'clamp(90px, 35vw, 130px)' : 'clamp(120px, 20vw, 200px)',
+        height: 'auto',
         position: 'absolute',
         transform: 'translate(-50%, -50%)',
         transformStyle: 'preserve-3d',
@@ -104,8 +99,8 @@ const Hat: React.FC<HatProps> = ({
             damping: 20
           }}
         >
-          <div className={`${isMobile ? 'w-[60px] h-[60px]' : 'w-[130px] h-[130px]'} bg-[#D946EF] rounded-full shadow-lg flex items-center justify-center`}>
-            <div className={`${isMobile ? 'w-[52px] h-[52px]' : 'w-[120px] h-[120px]'} bg-[#D946EF] rounded-full shadow-inner glow-effect`}></div>
+          <div className={`${isMobile ? 'w-[50px] h-[50px]' : 'w-[80px] h-[80px]'} bg-[#D946EF] rounded-full shadow-lg flex items-center justify-center`}>
+            <div className={`${isMobile ? 'w-[42px] h-[42px]' : 'w-[70px] h-[70px]'} bg-[#D946EF] rounded-full shadow-inner glow-effect`}></div>
           </div>
         </motion.div>
       )}
