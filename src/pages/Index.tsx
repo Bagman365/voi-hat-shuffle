@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import GameBoard from '@/components/GameBoard';
@@ -142,7 +143,7 @@ const Index = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
             >
-              Find the ball under the hat and win $VOI
+              Find Victor under the hat to WIN
             </motion.p>
             
             <div className="mt-2 w-full flex justify-center">
@@ -185,7 +186,7 @@ const Index = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
             >
-              Find the ball under the hat and win $VOI
+              Find Victor under the hat to WIN
             </motion.p>
           </div>
         )}

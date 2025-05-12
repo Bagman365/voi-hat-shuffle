@@ -43,7 +43,7 @@ const ResultMessage: React.FC<ResultMessageProps> = ({ won, amount, onClose }) =
           </div>
           
           <h3 className="text-2xl font-bold text-white mb-2">
-            {won ? 'You Won!' : 'Try Again'}
+            {won ? 'You Found Victor!' : 'Try Again'}
           </h3>
           
           {won && (
@@ -62,7 +62,7 @@ const ResultMessage: React.FC<ResultMessageProps> = ({ won, amount, onClose }) =
           )}
           
           {!won && (
-            <p className="text-white/80">The ball was under a different hat.</p>
+            <p className="text-white/80">Victor was under a different hat.</p>
           )}
         </div>
       </motion.div>
