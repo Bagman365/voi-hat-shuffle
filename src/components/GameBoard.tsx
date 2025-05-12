@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Hat from './Hat';
@@ -33,7 +32,7 @@ const GameBoard: React.FC<GameBoardProps> = ({
       // Mobile: Use a triangular layout (2 on top, 1 on bottom)
       const topRowY = -80; // Y position for the top row hats
       const bottomRowY = 80; // Y position for the bottom row hat
-      const horizontalSpacing = window.innerWidth < 400 ? 90 : 110; // Increase spacing slightly
+      const horizontalSpacing = window.innerWidth < 400 ? 80 : 100; // Adjust for very small screens
       
       setHatPositions([
         { x: -horizontalSpacing, y: topRowY },  // Top left hat position
@@ -41,8 +40,8 @@ const GameBoard: React.FC<GameBoardProps> = ({
         { x: 0, y: bottomRowY }                 // Bottom center hat position
       ]);
     } else {
-      // Desktop: Horizontal layout with more space for larger hats (125% increase)
-      const spacing = 700; // Increased from 560 to accommodate 125% larger hats
+      // Desktop: Horizontal layout with more space
+      const spacing = 490;
       setHatPositions([
         { x: -spacing, y: 0 },  // Left hat position
         { x: 0, y: 0 },         // Center hat position
@@ -81,7 +80,7 @@ const GameBoard: React.FC<GameBoardProps> = ({
       // Mobile: Use triangular layout (2 on top, 1 on bottom)
       const topRowY = -80;
       const bottomRowY = 80;
-      const horizontalSpacing = window.innerWidth < 400 ? 90 : 110; // Increased spacing
+      const horizontalSpacing = window.innerWidth < 400 ? 80 : 100;
       
       setHatPositions([
         { x: -horizontalSpacing, y: topRowY },  // Top left
@@ -89,7 +88,7 @@ const GameBoard: React.FC<GameBoardProps> = ({
         { x: 0, y: bottomRowY }                 // Bottom center
       ]);
     } else {
-      const spacing = 700; // Increased spacing for 125% larger hats
+      const spacing = 490;
       setHatPositions([
         { x: -spacing, y: 0 },
         { x: 0, y: 0 },
@@ -180,7 +179,7 @@ const GameBoard: React.FC<GameBoardProps> = ({
               <Hat 
                 key={hatId}
                 id={hatId}
-                position={hatPositions[hatId] || { x: (hatId - 1) * 700, y: 0 }}
+                position={hatPositions[hatId] || { x: (hatId - 1) * 490, y: 0 }}
                 hasBall={hatId === ballPosition}
                 isRevealed={revealedHat === hatId}
                 onSelect={handleHatSelect}

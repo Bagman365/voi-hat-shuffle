@@ -24,6 +24,11 @@ const Hat: React.FC<HatProps> = ({
 }) => {
   const isMobile = useIsMobile();
   
+  // Calculate size based on screen size
+  const hatSize = isMobile ? 
+    (window.innerWidth < 400 ? 160 : 200) : // Reduced hat size on mobile (~40% reduction)
+    390; // Original size on desktop
+  
   return (
     <motion.div
       className={`absolute cursor-pointer transition-transform duration-300 transform ${
@@ -46,8 +51,8 @@ const Hat: React.FC<HatProps> = ({
       onClick={() => isSelectable && onSelect(id)}
       whileHover={isSelectable && !isMobile ? { scale: 1.12, y: -15, rotateX: 5, rotateY: 5, z: 10 } : {}}
       style={{
-        width: isMobile ? 'clamp(100px, 35vw, 140px)' : 'clamp(225px, 30vw, 350px)', // 125% increase from previous sizes
-        height: 'auto',
+        width: `${hatSize}px`,
+        height: `${hatSize}px`,
         position: 'absolute',
         transform: 'translate(-50%, -50%)',
         transformStyle: 'preserve-3d',
@@ -69,16 +74,17 @@ const Hat: React.FC<HatProps> = ({
           damping: 20 
         }}
       >
-        <div className="w-full h-full relative flex items-center justify-center">
-          {/* Custom VOI Hat Image */}
-          <img 
-            src="/lovable-uploads/ccbefbda-4dbc-4db2-89f4-644ab1b902ff.png" 
-            alt="VOI Hat" 
-            className="w-[85%] h-auto object-contain filter drop-shadow-lg"
-            style={{
-              filter: 'drop-shadow(0px 4px 8px rgba(0, 0, 0, 0.3))'
-            }}
-          />
+        <div className="w-full h-full relative">
+          {/* Hat Base */}
+          <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-[80%] h-[20%] bg-[#9b87f5] dark:bg-[#33C3F0] rounded-full shadow-lg"></div>
+          
+          {/* Hat Top */}
+          <div className="absolute bottom-[19%] left-1/2 transform -translate-x-1/2 w-[70%] h-[55%] bg-[#1A1F2C] rounded-t-[180px] shadow-inner"></div>
+          
+          {/* VOI Logo on Hat */}
+          <div className="absolute bottom-[40%] left-1/2 transform -translate-x-1/2 text-white font-bold text-center text-3xl md:text-3xl text-[min(3vw,24px)]">
+            VOI
+          </div>
         </div>
       </motion.div>
       
@@ -99,8 +105,8 @@ const Hat: React.FC<HatProps> = ({
             damping: 20
           }}
         >
-          <div className={`${isMobile ? 'w-[55px] h-[55px]' : 'w-[112px] h-[112px]'} bg-[#D946EF] rounded-full shadow-lg flex items-center justify-center`}>
-            <div className={`${isMobile ? 'w-[47px] h-[47px]' : 'w-[98px] h-[98px]'} bg-[#D946EF] rounded-full shadow-inner glow-effect`}></div>
+          <div className={`${isMobile ? 'w-[60px] h-[60px]' : 'w-[130px] h-[130px]'} bg-[#D946EF] rounded-full shadow-lg flex items-center justify-center`}>
+            <div className={`${isMobile ? 'w-[52px] h-[52px]' : 'w-[120px] h-[120px]'} bg-[#D946EF] rounded-full shadow-inner glow-effect`}></div>
           </div>
         </motion.div>
       )}
