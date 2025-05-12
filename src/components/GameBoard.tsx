@@ -32,7 +32,7 @@ const GameBoard: React.FC<GameBoardProps> = ({
       // Mobile: Use a triangular layout (2 on top, 1 on bottom)
       const topRowY = -80; // Y position for the top row hats
       const bottomRowY = 80; // Y position for the bottom row hat
-      const horizontalSpacing = window.innerWidth < 400 ? 80 : 100; // Adjust for very small screens
+      const horizontalSpacing = window.innerWidth < 400 ? 90 : 110; // Increase spacing slightly
       
       setHatPositions([
         { x: -horizontalSpacing, y: topRowY },  // Top left hat position
@@ -40,8 +40,8 @@ const GameBoard: React.FC<GameBoardProps> = ({
         { x: 0, y: bottomRowY }                 // Bottom center hat position
       ]);
     } else {
-      // Desktop: Horizontal layout with more space
-      const spacing = 490;
+      // Desktop: Horizontal layout with more space for larger hats
+      const spacing = 560; // Increased from 490 to accommodate larger hats
       setHatPositions([
         { x: -spacing, y: 0 },  // Left hat position
         { x: 0, y: 0 },         // Center hat position
@@ -80,7 +80,7 @@ const GameBoard: React.FC<GameBoardProps> = ({
       // Mobile: Use triangular layout (2 on top, 1 on bottom)
       const topRowY = -80;
       const bottomRowY = 80;
-      const horizontalSpacing = window.innerWidth < 400 ? 80 : 100;
+      const horizontalSpacing = window.innerWidth < 400 ? 90 : 110; // Increased spacing
       
       setHatPositions([
         { x: -horizontalSpacing, y: topRowY },  // Top left
@@ -88,7 +88,7 @@ const GameBoard: React.FC<GameBoardProps> = ({
         { x: 0, y: bottomRowY }                 // Bottom center
       ]);
     } else {
-      const spacing = 490;
+      const spacing = 560; // Increased spacing
       setHatPositions([
         { x: -spacing, y: 0 },
         { x: 0, y: 0 },
@@ -179,7 +179,7 @@ const GameBoard: React.FC<GameBoardProps> = ({
               <Hat 
                 key={hatId}
                 id={hatId}
-                position={hatPositions[hatId] || { x: (hatId - 1) * 490, y: 0 }}
+                position={hatPositions[hatId] || { x: (hatId - 1) * 560, y: 0 }}
                 hasBall={hatId === ballPosition}
                 isRevealed={revealedHat === hatId}
                 onSelect={handleHatSelect}

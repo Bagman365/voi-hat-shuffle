@@ -46,7 +46,7 @@ const Hat: React.FC<HatProps> = ({
       onClick={() => isSelectable && onSelect(id)}
       whileHover={isSelectable && !isMobile ? { scale: 1.12, y: -15, rotateX: 5, rotateY: 5, z: 10 } : {}}
       style={{
-        width: isMobile ? 'clamp(90px, 35vw, 130px)' : 'clamp(120px, 20vw, 200px)',
+        width: isMobile ? 'clamp(100px, 35vw, 140px)' : 'clamp(180px, 24vw, 280px)',
         height: 'auto',
         position: 'absolute',
         transform: 'translate(-50%, -50%)',
@@ -99,8 +99,8 @@ const Hat: React.FC<HatProps> = ({
             damping: 20
           }}
         >
-          <div className={`${isMobile ? 'w-[50px] h-[50px]' : 'w-[80px] h-[80px]'} bg-[#D946EF] rounded-full shadow-lg flex items-center justify-center`}>
-            <div className={`${isMobile ? 'w-[42px] h-[42px]' : 'w-[70px] h-[70px]'} bg-[#D946EF] rounded-full shadow-inner glow-effect`}></div>
+          <div className={`${isMobile ? 'w-[55px] h-[55px]' : 'w-[90px] h-[90px]'} bg-[#D946EF] rounded-full shadow-lg flex items-center justify-center`}>
+            <div className={`${isMobile ? 'w-[47px] h-[47px]' : 'w-[78px] h-[78px]'} bg-[#D946EF] rounded-full shadow-inner glow-effect`}></div>
           </div>
         </motion.div>
       )}
