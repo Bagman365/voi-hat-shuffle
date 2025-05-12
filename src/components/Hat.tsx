@@ -32,29 +32,40 @@ const Hat: React.FC<HatProps> = ({
       }}
       transition={{ duration: 0.4 }}
       onClick={() => isSelectable && onSelect(id)}
-      whileHover={isSelectable ? { scale: 1.1, y: -10 } : {}}
+      whileHover={isSelectable ? { scale: 1.12, y: -15, rotateX: 5, rotateY: 5, z: 10 } : {}}
       style={{
-        width: '380px',  // Increased from 300px (approximately 27% larger)
-        height: '380px', // Increased from 300px (approximately 27% larger)
+        width: '390px',  // Increased by ~2.6% from 380px
+        height: '390px', // Increased by ~2.6% from 380px
         position: 'absolute',
         transform: 'translate(-50%, -50%)',
+        transformStyle: 'preserve-3d',
+        perspective: '1000px'
       }}
     >
       {/* Hat */}
       <motion.div
         className="w-full h-full flex items-center justify-center"
-        animate={{ rotateX: isRevealed ? 45 : 0, y: isRevealed ? -70 : 0 }}
-        transition={{ duration: 0.4 }}
+        animate={{ 
+          rotateX: isRevealed ? 60 : 0, 
+          y: isRevealed ? -80 : 0,
+          z: isRevealed ? 40 : 0
+        }}
+        transition={{ 
+          duration: 0.4, 
+          type: "spring", 
+          stiffness: 260, 
+          damping: 20 
+        }}
       >
         <div className="w-full h-full relative">
           {/* Hat Base */}
-          <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-[320px] h-[75px] bg-[#9b87f5] dark:bg-[#33C3F0] rounded-full shadow-lg"></div>
+          <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-[330px] h-[78px] bg-[#9b87f5] dark:bg-[#33C3F0] rounded-full shadow-lg"></div>
           
           {/* Hat Top */}
-          <div className="absolute bottom-[70px] left-1/2 transform -translate-x-1/2 w-[280px] h-[210px] bg-[#1A1F2C] rounded-t-[180px] shadow-inner"></div>
+          <div className="absolute bottom-[73px] left-1/2 transform -translate-x-1/2 w-[288px] h-[216px] bg-[#1A1F2C] rounded-t-[180px] shadow-inner"></div>
           
           {/* VOI Logo on Hat */}
-          <div className="absolute bottom-[140px] left-1/2 transform -translate-x-1/2 text-white font-bold text-center text-3xl">
+          <div className="absolute bottom-[145px] left-1/2 transform -translate-x-1/2 text-white font-bold text-center text-3xl">
             VOI
           </div>
         </div>
@@ -63,12 +74,23 @@ const Hat: React.FC<HatProps> = ({
       {/* Ball (only visible when revealed) */}
       {hasBall && (
         <motion.div
-          className="absolute left-1/2 bottom-[10px] transform -translate-x-1/2"
+          className="absolute left-1/2 bottom-[15px] transform -translate-x-1/2"
           initial={{ scale: 0 }}
-          animate={{ scale: isRevealed ? 1 : 0 }}
-          transition={{ duration: 0.3, delay: isRevealed ? 0.2 : 0 }}
+          animate={{ 
+            scale: isRevealed ? 1 : 0,
+            y: isRevealed ? 5 : 0
+          }}
+          transition={{ 
+            duration: 0.4, 
+            delay: isRevealed ? 0.2 : 0,
+            type: "spring",
+            stiffness: 300,
+            damping: 20
+          }}
         >
-          <div className="w-[120px] h-[120px] bg-[#D946EF] rounded-full shadow-lg" />
+          <div className="w-[130px] h-[130px] bg-[#D946EF] rounded-full shadow-lg flex items-center justify-center">
+            <div className="w-[120px] h-[120px] bg-[#D946EF] rounded-full shadow-inner glow-effect"></div>
+          </div>
         </motion.div>
       )}
     </motion.div>

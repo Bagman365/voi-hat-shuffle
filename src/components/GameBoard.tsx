@@ -29,8 +29,9 @@ const GameBoard: React.FC<GameBoardProps> = ({
   
   // Calculate hat spacing based on screen size
   useEffect(() => {
-    // Calculate spacing based on screen size to keep hats centered as a group
-    const spacing = isMobile ? 220 : 480; // Increased spacing for larger hats
+    // Use more adaptive spacing based on screen size
+    // More compact on mobile, wider on desktop
+    const spacing = isMobile ? 200 : 490; 
     
     setHatPositions([
       { x: -spacing, y: 0 },  // Left hat position
@@ -65,7 +66,7 @@ const GameBoard: React.FC<GameBoardProps> = ({
     setBallPosition(randomPosition);
     
     // Reset hat positions based on current screen size
-    const spacing = isMobile ? 220 : 480; // Increased spacing for larger hats
+    const spacing = isMobile ? 200 : 490;
     setHatPositions([
       { x: -spacing, y: 0 },  // Left hat position
       { x: 0, y: 0 },         // Center hat position
@@ -155,7 +156,7 @@ const GameBoard: React.FC<GameBoardProps> = ({
               <Hat 
                 key={hatId}
                 id={hatId}
-                position={hatPositions[hatId] || { x: (hatId - 1) * 480, y: 0 }}
+                position={hatPositions[hatId] || { x: (hatId - 1) * 490, y: 0 }}
                 hasBall={hatId === ballPosition}
                 isRevealed={revealedHat === hatId}
                 onSelect={handleHatSelect}
