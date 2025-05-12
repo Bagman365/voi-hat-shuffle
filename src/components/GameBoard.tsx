@@ -19,9 +19,9 @@ const GameBoard: React.FC<GameBoardProps> = ({
 }) => {
   const [ballPosition, setBallPosition] = useState<number>(0);
   const [hatPositions, setHatPositions] = useState<Array<{x: number, y: number}>>([
-    { x: -350, y: 0 }, // Left hat position
+    { x: -300, y: 0 }, // Left hat position
     { x: 0, y: 0 },    // Center hat position
-    { x: 350, y: 0 }   // Right hat position
+    { x: 300, y: 0 }   // Right hat position
   ]);
   const [isShuffling, setIsShuffling] = useState<boolean>(false);
   const [selectedHat, setSelectedHat] = useState<number | null>(null);
@@ -56,9 +56,9 @@ const GameBoard: React.FC<GameBoardProps> = ({
     
     // Reset hat positions
     setHatPositions([
-      { x: -350, y: 0 }, // Left hat position
+      { x: -300, y: 0 }, // Left hat position
       { x: 0, y: 0 },    // Center hat position
-      { x: 350, y: 0 }   // Right hat position
+      { x: 300, y: 0 }   // Right hat position
     ]);
     
     // Start shuffling after a brief delay
@@ -129,10 +129,10 @@ const GameBoard: React.FC<GameBoardProps> = ({
   };
   
   return (
-    <div className="relative w-full h-[600px] flex items-center justify-center">
+    <div className="relative w-full h-[500px] flex items-center justify-center">
       {/* Game area */}
       <motion.div 
-        className="relative w-full max-w-[1100px] h-[500px] flex items-center justify-center"
+        className="relative w-full max-w-[900px] h-[400px] flex items-center justify-center"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}

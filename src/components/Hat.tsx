@@ -39,7 +39,6 @@ const Hat: React.FC<HatProps> = ({
         position: 'absolute',
         top: '50%',
         left: '50%',
-        marginLeft: position.x, // Add this to adjust the X position
         transform: 'translate(-50%, -50%)',
       }}
     >
