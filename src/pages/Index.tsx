@@ -1,4 +1,6 @@
+
 import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import GameBoard from '@/components/GameBoard';
 import ControlsPanel from '@/components/ControlsPanel';
 import StatusPanel from '@/components/StatusPanel';
@@ -126,13 +128,23 @@ const Index = () => {
         {/* Mobile layout: stacked */}
         {isMobile ? (
           <div className="flex flex-col gap-4 items-center">
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-[#9b87f5] to-[#D946EF] text-transparent bg-clip-text mb-1">
+            <motion.h1 
+              className="title-text text-center mb-1"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
               VOI HAT MONTE
-            </h1>
+            </motion.h1>
             
-            <p className="text-md text-gray-400 text-center px-2 max-w-[300px]">
+            <motion.p 
+              className="subtitle-text text-gray-400 text-center px-2 max-w-[300px]"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+            >
               Find the ball under the hat and win $VOI
-            </p>
+            </motion.p>
             
             <div className="mt-2">
               <WalletPanel 
@@ -152,12 +164,22 @@ const Index = () => {
             </div>
             
             <div className="flex-1 text-center">
-              <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-[#9b87f5] to-[#D946EF] text-transparent bg-clip-text mb-2">
+              <motion.h1 
+                className="title-text mb-2"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+              >
                 VOI HAT MONTE
-              </h1>
-              <p className="text-lg md:text-xl text-gray-400 max-w-md mx-auto">
+              </motion.h1>
+              <motion.p 
+                className="subtitle-text text-gray-400 max-w-md mx-auto"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.4 }}
+              >
                 Find the ball under the hat and win $VOI
-              </p>
+              </motion.p>
             </div>
             
             <div className="flex-1 flex justify-end items-start">
