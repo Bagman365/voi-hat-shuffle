@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import GameBoard from '@/components/GameBoard';
@@ -124,7 +123,7 @@ const Index = () => {
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-[#1A1F2C] to-[#0f1218]">
       {/* Header with wallet button - adaptive layout for mobile */}
-      <header className="pt-4 md:pt-8 pb-3 md:pb-6 px-4 md:px-6">
+      <header className="pt-4 md:pt-8 pb-3 md:pb-6 px-4 md:px-6 container mx-auto">
         {/* Mobile layout: stacked */}
         {isMobile ? (
           <div className="flex flex-col gap-4 items-center">
@@ -146,7 +145,7 @@ const Index = () => {
               Find the ball under the hat and win $VOI
             </motion.p>
             
-            <div className="mt-2">
+            <div className="mt-2 w-full flex justify-center">
               <WalletPanel 
                 isConnected={walletConnected}
                 balance={balance}
@@ -157,45 +156,42 @@ const Index = () => {
             </div>
           </div>
         ) : (
-          // Desktop layout: three columns
-          <div className="flex items-center justify-between">
-            <div className="flex-1">
-              {/* Empty div for flex spacing */}
+          // Desktop layout: wallet aligned with text
+          <div className="flex flex-col items-center relative">
+            <div className="w-full max-w-4xl mx-auto relative">
+              <div className="absolute right-0 top-0">
+                <WalletPanel 
+                  isConnected={walletConnected}
+                  balance={balance}
+                  address={walletAddress}
+                  onConnect={handleConnectWallet}
+                  isMobile={isMobile}
+                />
+              </div>
             </div>
             
-            <div className="flex-1 text-center">
-              <motion.h1 
-                className="title-text mb-2"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-              >
-                VOI HAT MONTE
-              </motion.h1>
-              <motion.p 
-                className="subtitle-text text-gray-400 max-w-md mx-auto"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.4 }}
-              >
-                Find the ball under the hat and win $VOI
-              </motion.p>
-            </div>
+            <motion.h1 
+              className="title-text mb-2"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
+              VOI HAT MONTE
+            </motion.h1>
             
-            <div className="flex-1 flex justify-end items-start">
-              <WalletPanel 
-                isConnected={walletConnected}
-                balance={balance}
-                address={walletAddress}
-                onConnect={handleConnectWallet}
-                isMobile={isMobile}
-              />
-            </div>
+            <motion.p 
+              className="subtitle-text text-gray-400 max-w-md mx-auto"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+            >
+              Find the ball under the hat and win $VOI
+            </motion.p>
           </div>
         )}
       </header>
       
-      {/* Main content - Game Board First */}
+      {/* Main content */}
       <main className="flex-1 container mx-auto px-2 md:px-4 flex flex-col">
         {/* Game board with increased vertical space */}
         <div className="flex-1 flex items-center justify-center relative overflow-hidden mb-4 md:mb-10">
