@@ -90,7 +90,7 @@ const Index = () => {
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-[#1A1F2C] to-[#0f1218]">
       {/* Header */}
-      <header className="pt-6 pb-4 px-4 text-center">
+      <header className="pt-6 pb-2 px-4 text-center">
         <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-[#9b87f5] to-[#D946EF] text-transparent bg-clip-text mb-2">
           VOI Hat Monte
         </h1>
@@ -102,13 +102,13 @@ const Index = () => {
       {/* Main content - Game Board First */}
       <main className="flex-1 container mx-auto px-4 flex flex-col">
         {/* Game board */}
-        <div className="flex-1 flex items-center justify-center relative overflow-hidden mb-6">
+        <div className="flex-1 flex items-center justify-center relative overflow-hidden mb-4">
           {/* Galaxy background effect */}
           <div className="absolute inset-0 overflow-hidden">
             <div className="stars-bg"></div>
           </div>
           
-          <div className="relative z-10 w-full">
+          <div className="relative z-10 w-full max-w-[1200px] mx-auto">
             <GameBoard 
               isPlaying={isPlaying} 
               shuffleSpeed={shuffleSpeed}
