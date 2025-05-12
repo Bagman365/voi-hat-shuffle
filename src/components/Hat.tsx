@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -75,7 +74,7 @@ const Hat: React.FC<HatProps> = ({
       }}
     >
       {/* Hat Image */}
-      <HatImage isRevealed={isRevealed} />
+      <HatImage isRevealed={isRevealed} hasBall={hasBall} />
       
       {/* Confetti effect */}
       <Confetti 

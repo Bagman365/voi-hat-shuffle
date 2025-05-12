@@ -4,9 +4,15 @@ import { motion } from 'framer-motion';
 
 interface HatImageProps {
   isRevealed: boolean;
+  hasBall?: boolean;
 }
 
-const HatImage: React.FC<HatImageProps> = ({ isRevealed }) => {
+const HatImage: React.FC<HatImageProps> = ({ isRevealed, hasBall = false }) => {
+  // If revealed and has ball, completely hide the hat
+  if (isRevealed && hasBall) {
+    return null;
+  }
+  
   return (
     <motion.div
       className="w-full h-full flex items-center justify-center"
