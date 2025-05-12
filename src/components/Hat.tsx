@@ -26,7 +26,6 @@ const Hat: React.FC<HatProps> = ({
   const isMobile = useIsMobile();
   const [showConfetti, setShowConfetti] = useState(false);
   const [confettiComplete, setConfettiComplete] = useState(false);
-  const [showRays, setShowRays] = useState(false);
   
   // Calculate size based on screen size
   const hatSize = isMobile ? 
@@ -37,7 +36,6 @@ const Hat: React.FC<HatProps> = ({
   useEffect(() => {
     if (isRevealed && hasBall) {
       setShowConfetti(true);
-      setShowRays(true);
       // Auto-hide effects after animation completes
       const timer = setTimeout(() => {
         setConfettiComplete(true);
@@ -45,7 +43,6 @@ const Hat: React.FC<HatProps> = ({
       return () => clearTimeout(timer);
     } else {
       setShowConfetti(false);
-      setShowRays(false);
       setConfettiComplete(false);
     }
   }, [isRevealed, hasBall]);
@@ -124,27 +121,6 @@ const Hat: React.FC<HatProps> = ({
               h: 0
             }}
           />
-        </div>
-      )}
-      
-      {/* Light rays effect when correct hat is revealed */}
-      {showRays && hasBall && isRevealed && (
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full pointer-events-none z-40">
-          <div className="absolute inset-0 animate-rays">
-            {[...Array(12)].map((_, i) => (
-              <div 
-                key={i}
-                className="absolute top-1/2 left-1/2 w-full h-1 bg-gradient-to-r from-[#9b87f5] via-[#D946EF] to-transparent"
-                style={{ 
-                  transform: `rotate(${i * 30}deg)`, 
-                  transformOrigin: 'left center',
-                  opacity: 0.7,
-                  animationDelay: `${i * 0.1}s`,
-                  animation: 'rayGrow 2s ease-out'
-                }}
-              />
-            ))}
-          </div>
         </div>
       )}
       
