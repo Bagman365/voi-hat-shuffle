@@ -1,124 +1,56 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import GameBoard from '@/components/GameBoard';
 import ControlsPanel from '@/components/ControlsPanel';
 import StatusPanel from '@/components/StatusPanel';
 import WalletPanel from '@/components/WalletPanel';
-import { useToast } from '@/components/ui/use-toast';
-import walletService from '@/services/walletService';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useGameStatus } from '@/hooks/useGameStatus';
+import { useWalletInteraction } from '@/hooks/useWalletInteraction';
 
 const Index = () => {
   const isMobile = useIsMobile();
-  const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [wagerAmount, setWagerAmount] = useState<number>(10);
-  const [shuffleSpeed, setShuffleSpeed] = useState<'Normal' | 'Fast' | 'Extreme'>('Normal');
-  const [wins, setWins] = useState<number>(0);
-  const [streak, setStreak] = useState<number>(0);
-  const [walletConnected, setWalletConnected] = useState<boolean>(false);
-  const [balance, setBalance] = useState<number>(100);
-  const [walletAddress, setWalletAddress] = useState<string>('0x1234...abcd');
-  const { toast } = useToast();
+  
+  // Use custom hooks for separated concerns
+  const {
+    walletConnected,
+    balance,
+    walletAddress,
+    handleConnectWallet,
+    updateBalanceForWager,
+    updateBalanceForWin
+  } = useWalletInteraction();
 
-  // Check wallet connection status on load
-  useEffect(() => {
-    const checkCurrentWallet = async () => {
-      const currentWallet = walletService.getCurrentWallet();
-      if (currentWallet) {
-        setWalletConnected(true);
-        setBalance(currentWallet.balance);
-        setWalletAddress(currentWallet.address);
-      }
-    };
-    
-    checkCurrentWallet();
-    
-    // Set up polling to refresh balance periodically
-    const balanceInterval = setInterval(async () => {
-      if (walletConnected) {
-        const newBalance = await walletService.refreshBalance();
-        if (newBalance !== null) {
-          setBalance(newBalance);
-        }
-      }
-    }, 30000); // Check every 30 seconds
-    
-    return () => clearInterval(balanceInterval);
-  }, [walletConnected]);
+  const {
+    isPlaying,
+    shuffleSpeed,
+    setShuffleSpeed,
+    wins,
+    streak,
+    handlePlay,
+    handleGameComplete
+  } = useGameStatus({
+    walletConnected,
+    balance,
+    wagerAmount
+  });
 
-  // Simulate game timer
-  useEffect(() => {
-    let gameTimer: NodeJS.Timeout;
-    
-    if (isPlaying) {
-      const duration = 
-        shuffleSpeed === 'Normal' ? 6000 : 
-        shuffleSpeed === 'Fast' ? 4000 : 2500;
-        
-      gameTimer = setTimeout(() => {
-        setIsPlaying(false);
-      }, duration + 500);
-    }
-    
-    return () => {
-      if (gameTimer) clearTimeout(gameTimer);
-    };
-  }, [isPlaying, shuffleSpeed]);
-
-  const handlePlay = () => {
-    if (!walletConnected) {
-      toast({
-        title: "Wallet Not Connected",
-        description: "Connect your wallet to play with real VOI tokens.",
-      });
-      return;
-    }
-    
-    if (balance < wagerAmount) {
-      toast({
-        title: "Insufficient Balance",
-        description: "You don't have enough VOI tokens for this wager.",
-        variant: "destructive"
-      });
-      return;
-    }
-    
-    // Deduct wager from balance
-    setBalance(prev => prev - wagerAmount);
-    setIsPlaying(true);
-  };
-
-  const handleGameComplete = (won: boolean) => {
+  // Wrap game completion handler to also update wallet balance
+  const onGameCompleteWithBalance = (won: boolean) => {
     if (won) {
-      setWins(prev => prev + 1);
-      setStreak(prev => prev + 1);
-      setBalance(prev => prev + (wagerAmount * 2));
-      
-      toast({
-        title: "You Won!",
-        description: `+${wagerAmount * 2} VOI has been added to your balance.`,
-      });
-    } else {
-      setStreak(0);
-      
-      toast({
-        title: "Better Luck Next Time",
-        description: "Try again for a chance to win.",
-      });
+      updateBalanceForWin(wagerAmount * 2);
     }
+    handleGameComplete(won);
   };
 
-  const handleConnectWallet = async () => {
-    // Let WalletPanel handle the connection flow
-    setWalletConnected(true);
-    
-    // Update address and balance with actual wallet info
-    const wallet = walletService.getCurrentWallet();
-    if (wallet) {
-      setWalletAddress(wallet.address);
-      setBalance(wallet.balance);
+  // Wrap play handler to also update wallet balance
+  const onPlay = () => {
+    if (walletConnected && balance >= wagerAmount) {
+      updateBalanceForWager(wagerAmount);
     }
+    handlePlay();
   };
 
   return (
@@ -205,7 +137,7 @@ const Index = () => {
             <GameBoard 
               isPlaying={isPlaying} 
               shuffleSpeed={shuffleSpeed}
-              onGameComplete={handleGameComplete}
+              onGameComplete={onGameCompleteWithBalance}
               wagerAmount={wagerAmount}
             />
           </div>
@@ -217,7 +149,7 @@ const Index = () => {
             <div className="flex flex-col md:flex-row gap-4 md:gap-5 justify-center">
               <StatusPanel wins={wins} streak={streak} />
               <ControlsPanel 
-                onPlay={handlePlay}
+                onPlay={onPlay}
                 isPlaying={isPlaying}
                 wagerAmount={wagerAmount}
                 onWagerChange={setWagerAmount}
