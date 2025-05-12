@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -49,6 +50,11 @@
     --sidebar-border: 220 13% 91%;
 
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    --voi-purple: 255 82% 75%;
+    --voi-dark: 223 25% 14%;
+    --voi-pink: 293 87% 61%;
+    --voi-blue: 191 87% 57%;
   }
 
   .dark {
@@ -98,4 +104,52 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Galaxy background effect */
+.stars-bg {
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  top: -50%;
+  left: -50%;
+  background-image: 
+    radial-gradient(2px 2px at 20px 30px, #ffffff, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 40px 70px, #ffffff, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 90px 40px, #ffffff, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 160px 120px, #ffffff, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 230px 80px, #ffffff, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 270px 180px, #ffffff, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 350px 100px, #ffffff, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 400px 200px, #ffffff, rgba(0,0,0,0));
+  background-repeat: repeat;
+  background-size: 450px 450px;
+  animation: stars-animation 60s linear infinite;
+  opacity: 0.3;
+}
+
+@keyframes stars-animation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Animations */
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.float {
+  animation: float 6s ease-in-out infinite;
 }
