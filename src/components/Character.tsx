@@ -17,7 +17,10 @@ const Character: React.FC<CharacterProps> = ({ isVisible, isRevealed, isTopLayer
   return (
     <motion.div
       className="absolute left-1/2 bottom-[15px] transform -translate-x-1/2"
-      style={{ zIndex: isRevealed ? 60 : 10 }}
+      style={{ 
+        zIndex: isRevealed ? 60 : 10,
+        pointerEvents: 'none'
+      }}
       initial={{ scale: 0.1 }}
       animate={{ 
         scale: isRevealed ? [null, 1.1, 0.9, 1.1, 0.9, 1] : 0,

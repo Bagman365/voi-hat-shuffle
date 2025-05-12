@@ -6,6 +6,7 @@ import Confetti from './Confetti';
 import Sparkles from './Sparkles';
 import Character from './Character';
 import HatImage from './HatImage';
+import Fireworks from './Fireworks';
 
 interface HatProps {
   id: number;
@@ -90,6 +91,9 @@ const Hat: React.FC<HatProps> = ({
 
       {/* Sparkles */}
       <Sparkles active={hasBall && isRevealed} />
+      
+      {/* Fireworks */}
+      <Fireworks active={hasBall && isRevealed} />
     </motion.div>
   );
 };
