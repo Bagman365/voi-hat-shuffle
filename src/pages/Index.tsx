@@ -5,8 +5,10 @@ import StatusPanel from '@/components/StatusPanel';
 import WalletPanel from '@/components/WalletPanel';
 import { useToast } from '@/components/ui/use-toast';
 import walletService from '@/services/walletService';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const Index = () => {
+  const isMobile = useIsMobile();
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [wagerAmount, setWagerAmount] = useState<number>(10);
   const [shuffleSpeed, setShuffleSpeed] = useState<'Normal' | 'Fast' | 'Extreme'>('Normal');
@@ -119,35 +121,62 @@ const Index = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-[#1A1F2C] to-[#0f1218]">
-      {/* Header with wallet button in top right */}
-      <header className="pt-8 pb-6 px-6 flex items-center justify-between">
-        <div className="flex-1">
-          {/* Empty div for flex spacing */}
-        </div>
-        
-        <div className="flex-1 text-center">
-          <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-[#9b87f5] to-[#D946EF] text-transparent bg-clip-text mb-2">
-            VOI HAT MONTE
-          </h1>
-          <p className="text-lg md:text-xl text-gray-400 max-w-md mx-auto">
-            Find the ball under the hat and win $VOI
-          </p>
-        </div>
-        
-        <div className="flex-1 flex justify-end items-start">
-          <WalletPanel 
-            isConnected={walletConnected}
-            balance={balance}
-            address={walletAddress}
-            onConnect={handleConnectWallet}
-          />
-        </div>
+      {/* Header with wallet button - adaptive layout for mobile */}
+      <header className="pt-4 md:pt-8 pb-3 md:pb-6 px-4 md:px-6">
+        {/* Mobile layout: stacked */}
+        {isMobile ? (
+          <div className="flex flex-col gap-4 items-center">
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-[#9b87f5] to-[#D946EF] text-transparent bg-clip-text mb-1">
+              VOI HAT MONTE
+            </h1>
+            
+            <p className="text-md text-gray-400 text-center px-2 max-w-[300px]">
+              Find the ball under the hat and win $VOI
+            </p>
+            
+            <div className="mt-2">
+              <WalletPanel 
+                isConnected={walletConnected}
+                balance={balance}
+                address={walletAddress}
+                onConnect={handleConnectWallet}
+                isMobile={isMobile}
+              />
+            </div>
+          </div>
+        ) : (
+          // Desktop layout: three columns
+          <div className="flex items-center justify-between">
+            <div className="flex-1">
+              {/* Empty div for flex spacing */}
+            </div>
+            
+            <div className="flex-1 text-center">
+              <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-[#9b87f5] to-[#D946EF] text-transparent bg-clip-text mb-2">
+                VOI HAT MONTE
+              </h1>
+              <p className="text-lg md:text-xl text-gray-400 max-w-md mx-auto">
+                Find the ball under the hat and win $VOI
+              </p>
+            </div>
+            
+            <div className="flex-1 flex justify-end items-start">
+              <WalletPanel 
+                isConnected={walletConnected}
+                balance={balance}
+                address={walletAddress}
+                onConnect={handleConnectWallet}
+                isMobile={isMobile}
+              />
+            </div>
+          </div>
+        )}
       </header>
       
       {/* Main content - Game Board First */}
-      <main className="flex-1 container mx-auto px-4 flex flex-col">
+      <main className="flex-1 container mx-auto px-2 md:px-4 flex flex-col">
         {/* Game board with increased vertical space */}
-        <div className="flex-1 flex items-center justify-center relative overflow-hidden mb-10">
+        <div className="flex-1 flex items-center justify-center relative overflow-hidden mb-4 md:mb-10">
           {/* Galaxy background effect */}
           <div className="absolute inset-0 overflow-hidden">
             <div className="stars-bg"></div>
@@ -164,9 +193,9 @@ const Index = () => {
         </div>
         
         {/* Controls and status panels - centered as one group */}
-        <div className="max-w-3xl mx-auto w-full mb-8">
-          <div className="grid grid-cols-1 gap-6">
-            <div className="flex flex-col md:flex-row gap-5 justify-center">
+        <div className="max-w-3xl mx-auto w-full mb-6 md:mb-8">
+          <div className="grid grid-cols-1 gap-4 md:gap-6">
+            <div className="flex flex-col md:flex-row gap-4 md:gap-5 justify-center">
               <StatusPanel wins={wins} streak={streak} />
               <ControlsPanel 
                 onPlay={handlePlay}
@@ -182,7 +211,7 @@ const Index = () => {
       </main>
       
       {/* Footer */}
-      <footer className="py-6 px-6 text-center text-gray-500 text-sm">
+      <footer className="py-4 md:py-6 px-4 md:px-6 text-center text-gray-500 text-sm">
         Made with ❤️ for VOI.Network • v0.1.0
       </footer>
     </div>

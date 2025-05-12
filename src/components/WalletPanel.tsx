@@ -17,13 +17,15 @@ interface WalletPanelProps {
   balance: number;
   address: string;
   onConnect: () => void;
+  isMobile?: boolean;
 }
 
 const WalletPanel: React.FC<WalletPanelProps> = ({ 
   isConnected, 
   balance, 
   address,
-  onConnect 
+  onConnect,
+  isMobile = false
 }) => {
   const { toast } = useToast();
   const [showWalletOptions, setShowWalletOptions] = useState(false);
@@ -83,22 +85,22 @@ const WalletPanel: React.FC<WalletPanelProps> = ({
   };
 
   return (
-    <div className="flex flex-row items-center gap-3 justify-end">
+    <div className={`flex ${isMobile ? 'flex-col items-center' : 'flex-row items-center gap-3 justify-end'}`}>
       {isConnected ? (
-        <div className="flex items-center gap-3">
-          <div className="flex flex-col items-end">
+        <div className={`flex ${isMobile ? 'flex-col items-center gap-2' : 'items-center gap-3'}`}>
+          <div className={`flex flex-col ${isMobile ? 'items-center text-center' : 'items-end'}`}>
             <div className="text-white">
               <span className="text-sm text-gray-300">Balance:</span>{" "}
               <span className="font-bold">{balance} VOI</span>
             </div>
-            <div className="text-xs text-gray-400 truncate max-w-[120px]">
+            <div className="text-xs text-gray-400 truncate max-w-[140px]">
               {truncateAddress(address)}
             </div>
           </div>
           <Button
             onClick={handleDisconnect}
             variant="outline"
-            size="sm"
+            size={isMobile ? "sm" : "sm"}
             className="border-red-500 text-white hover:bg-red-700/30"
           >
             <LogOut className="h-4 w-4" />
@@ -108,7 +110,8 @@ const WalletPanel: React.FC<WalletPanelProps> = ({
         <Button 
           onClick={handleWalletConnect}
           variant="outline" 
-          className="border-purple-500 text-white hover:bg-purple-700/30"
+          size={isMobile ? "sm" : "default"}
+          className={`border-purple-500 text-white hover:bg-purple-700/30 ${isMobile ? 'px-3 py-1 text-sm' : ''}`}
         >
           <Wallet className="mr-2 h-4 w-4" />
           Connect Wallet
@@ -117,7 +120,7 @@ const WalletPanel: React.FC<WalletPanelProps> = ({
 
       {/* Wallet Selection Dialog */}
       <Dialog open={showWalletOptions} onOpenChange={setShowWalletOptions}>
-        <DialogContent className="bg-gray-900 border-purple-500/50 text-white">
+        <DialogContent className="bg-gray-900 border-purple-500/50 text-white max-w-[350px] mx-auto">
           <DialogHeader>
             <DialogTitle className="text-gray-100">Connect Wallet</DialogTitle>
             <DialogDescription className="text-gray-400">

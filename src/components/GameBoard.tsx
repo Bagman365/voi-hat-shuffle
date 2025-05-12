@@ -29,15 +29,32 @@ const GameBoard: React.FC<GameBoardProps> = ({
   
   // Calculate hat spacing based on screen size
   useEffect(() => {
-    // Use more adaptive spacing based on screen size
-    // More compact on mobile, wider on desktop
-    const spacing = isMobile ? 200 : 490; 
-    
-    setHatPositions([
-      { x: -spacing, y: 0 },  // Left hat position
-      { x: 0, y: 0 },         // Center hat position
-      { x: spacing, y: 0 }    // Right hat position
-    ]);
+    if (isMobile) {
+      // Mobile: Stack hats vertically or in compact grid
+      if (window.innerWidth < 400) {
+        // Extra small screens, stack vertically
+        setHatPositions([
+          { x: 0, y: -180 },  // Top hat position
+          { x: 0, y: 0 },     // Middle hat position
+          { x: 0, y: 180 }    // Bottom hat position
+        ]);
+      } else {
+        // Small screens, triangular layout
+        setHatPositions([
+          { x: -120, y: -50 },  // Top left hat position
+          { x: 120, y: -50 },   // Top right hat position 
+          { x: 0, y: 120 }      // Bottom center hat position
+        ]);
+      }
+    } else {
+      // Desktop: Horizontal layout with more space
+      const spacing = 490;
+      setHatPositions([
+        { x: -spacing, y: 0 },  // Left hat position
+        { x: 0, y: 0 },         // Center hat position
+        { x: spacing, y: 0 }    // Right hat position
+      ]);
+    }
   }, [isMobile]);
   
   // Determine shuffle duration based on speed
@@ -66,12 +83,30 @@ const GameBoard: React.FC<GameBoardProps> = ({
     setBallPosition(randomPosition);
     
     // Reset hat positions based on current screen size
-    const spacing = isMobile ? 200 : 490;
-    setHatPositions([
-      { x: -spacing, y: 0 },  // Left hat position
-      { x: 0, y: 0 },         // Center hat position
-      { x: spacing, y: 0 }    // Right hat position
-    ]);
+    if (isMobile) {
+      if (window.innerWidth < 400) {
+        // Extra small screens
+        setHatPositions([
+          { x: 0, y: -180 },
+          { x: 0, y: 0 },
+          { x: 0, y: 180 }
+        ]);
+      } else {
+        // Small screens, triangular layout
+        setHatPositions([
+          { x: -120, y: -50 },
+          { x: 120, y: -50 },
+          { x: 0, y: 120 }
+        ]);
+      }
+    } else {
+      const spacing = 490;
+      setHatPositions([
+        { x: -spacing, y: 0 },
+        { x: 0, y: 0 },
+        { x: spacing, y: 0 }
+      ]);
+    }
     
     // Start shuffling after a brief delay
     setTimeout(() => {
@@ -141,10 +176,10 @@ const GameBoard: React.FC<GameBoardProps> = ({
   };
   
   return (
-    <div className="relative w-full h-[650px] flex items-center justify-center">
+    <div className={`relative w-full ${isMobile ? 'h-[750px]' : 'h-[650px]'} flex items-center justify-center`}>
       {/* Game area */}
       <motion.div 
-        className="relative w-full max-w-[1200px] h-[600px] flex items-center justify-center"
+        className="relative w-full max-w-[1200px] h-full flex items-center justify-center"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}

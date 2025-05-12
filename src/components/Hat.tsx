@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface HatProps {
   id: number;
@@ -19,6 +20,11 @@ const Hat: React.FC<HatProps> = ({
   onSelect,
   isSelectable
 }) => {
+  const isMobile = useIsMobile();
+  
+  // Calculate size based on screen size
+  const hatSize = isMobile ? 310 : 390; // 20% smaller on mobile
+  
   return (
     <motion.div
       className={`absolute cursor-pointer transition-transform duration-300 transform ${
@@ -28,14 +34,14 @@ const Hat: React.FC<HatProps> = ({
       animate={{ 
         x: position.x, 
         y: isRevealed ? -90 : position.y,
-        scale: isRevealed ? 0.9 : 1,
+        scale: isRevealed ? (isMobile ? 0.8 : 0.9) : 1,
       }}
       transition={{ duration: 0.4 }}
       onClick={() => isSelectable && onSelect(id)}
-      whileHover={isSelectable ? { scale: 1.12, y: -15, rotateX: 5, rotateY: 5, z: 10 } : {}}
+      whileHover={isSelectable && !isMobile ? { scale: 1.12, y: -15, rotateX: 5, rotateY: 5, z: 10 } : {}}
       style={{
-        width: '390px',  // Increased by ~2.6% from 380px
-        height: '390px', // Increased by ~2.6% from 380px
+        width: `${hatSize}px`,
+        height: `${hatSize}px`,
         position: 'absolute',
         transform: 'translate(-50%, -50%)',
         transformStyle: 'preserve-3d',
@@ -59,13 +65,13 @@ const Hat: React.FC<HatProps> = ({
       >
         <div className="w-full h-full relative">
           {/* Hat Base */}
-          <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-[330px] h-[78px] bg-[#9b87f5] dark:bg-[#33C3F0] rounded-full shadow-lg"></div>
+          <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-[80%] h-[20%] bg-[#9b87f5] dark:bg-[#33C3F0] rounded-full shadow-lg"></div>
           
           {/* Hat Top */}
-          <div className="absolute bottom-[73px] left-1/2 transform -translate-x-1/2 w-[288px] h-[216px] bg-[#1A1F2C] rounded-t-[180px] shadow-inner"></div>
+          <div className="absolute bottom-[19%] left-1/2 transform -translate-x-1/2 w-[70%] h-[55%] bg-[#1A1F2C] rounded-t-[180px] shadow-inner"></div>
           
           {/* VOI Logo on Hat */}
-          <div className="absolute bottom-[145px] left-1/2 transform -translate-x-1/2 text-white font-bold text-center text-3xl">
+          <div className="absolute bottom-[40%] left-1/2 transform -translate-x-1/2 text-white font-bold text-center text-3xl md:text-3xl text-[min(3vw,24px)]">
             VOI
           </div>
         </div>
@@ -88,8 +94,8 @@ const Hat: React.FC<HatProps> = ({
             damping: 20
           }}
         >
-          <div className="w-[130px] h-[130px] bg-[#D946EF] rounded-full shadow-lg flex items-center justify-center">
-            <div className="w-[120px] h-[120px] bg-[#D946EF] rounded-full shadow-inner glow-effect"></div>
+          <div className={`${isMobile ? 'w-[100px] h-[100px]' : 'w-[130px] h-[130px]'} bg-[#D946EF] rounded-full shadow-lg flex items-center justify-center`}>
+            <div className={`${isMobile ? 'w-[90px] h-[90px]' : 'w-[120px] h-[120px]'} bg-[#D946EF] rounded-full shadow-inner glow-effect`}></div>
           </div>
         </motion.div>
       )}
