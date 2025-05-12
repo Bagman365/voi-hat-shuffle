@@ -22,7 +22,8 @@ const Fireworks: React.FC<FireworksProps> = ({ active }) => {
     if (active) {
       // Create fireworks from both left and right sides
       const newFireworks = Array.from({ length: 30 }, (_, i) => {
-        const side = i % 2 === 0 ? 'left' : 'right';
+        // Explicitly type the side as 'left' | 'right' to match our state type
+        const side: 'left' | 'right' = i % 2 === 0 ? 'left' : 'right';
         return {
           id: i,
           // Position based on side (left or right)
