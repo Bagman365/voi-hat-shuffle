@@ -27,9 +27,8 @@ const Hat: React.FC<HatProps> = ({
       initial={{ scale: 1, y: 0 }}
       animate={{ 
         x: position.x, 
-        y: position.y,
+        y: isRevealed ? -50 : position.y, // Combined the y position logic
         scale: isRevealed ? 0.9 : 1,
-        y: isRevealed ? -50 : 0,
       }}
       transition={{ duration: 0.4 }}
       onClick={() => isSelectable && onSelect(id)}
