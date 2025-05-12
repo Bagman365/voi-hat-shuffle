@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Hat from './Hat';
@@ -139,11 +140,10 @@ const GameBoard: React.FC<GameBoardProps> = ({
   };
   
   return (
-    {/* Increased height for larger hats */}
     <div className="relative w-full h-[650px] flex items-center justify-center">
       {/* Game area */}
       <motion.div 
-        className="relative w-full max-w-[1200px] h-[600px] flex items-center justify-center" 
+        className="relative w-full max-w-[1200px] h-[600px] flex items-center justify-center"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
@@ -155,7 +155,7 @@ const GameBoard: React.FC<GameBoardProps> = ({
               <Hat 
                 key={hatId}
                 id={hatId}
-                position={hatPositions[hatId] || { x: (hatId - 1) * 480, y: 0 }} 
+                position={hatPositions[hatId] || { x: (hatId - 1) * 480, y: 0 }}
                 hasBall={hatId === ballPosition}
                 isRevealed={revealedHat === hatId}
                 onSelect={handleHatSelect}
