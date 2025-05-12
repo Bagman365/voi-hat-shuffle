@@ -124,30 +124,36 @@ const Hat: React.FC<HatProps> = ({
         </div>
       )}
       
-      {/* Happy character with exaggerated animation */}
+      {/* Happy character with continuous animation when revealed */}
       {hasBall && (
         <motion.div
           className="absolute left-1/2 bottom-[15px] transform -translate-x-1/2 z-10"
           initial={{ scale: 0.1 }}
           animate={{ 
-            scale: isRevealed ? [0.1, 1.5, 0.85, 1.1, 0.65] : 0,
-            y: isRevealed ? [0, 20, -30, 5, 0] : 0,
-            rotate: isRevealed ? [0, -10, 15, -5, 0] : 0
+            scale: isRevealed ? [null, 1.1, 0.9, 1.1, 0.9, 1] : 0,
+            y: isRevealed ? [null, -10, 5, -10, 5, 0] : 0,
+            rotate: isRevealed ? [null, -5, 5, -5, 5, 0] : 0
           }}
           transition={{ 
             scale: {
-              duration: 1.2,
-              times: [0, 0.3, 0.6, 0.8, 1],
-              ease: [0.34, 1.8, 0.64, 1], // Exaggerated bounce effect with cubic-bezier
+              duration: isRevealed ? 2 : 1.2,
+              repeat: isRevealed ? Infinity : 0,
+              repeatType: "loop",
+              times: isRevealed ? [0, 0.2, 0.4, 0.6, 0.8, 1] : [0, 0.3, 0.6, 0.8, 1],
+              ease: "easeInOut",
             },
             y: { 
-              duration: 1.5,
-              times: [0, 0.2, 0.5, 0.8, 1],
+              duration: isRevealed ? 2 : 1.5,
+              repeat: isRevealed ? Infinity : 0,
+              repeatType: "loop",
+              times: isRevealed ? [0, 0.2, 0.4, 0.6, 0.8, 1] : [0, 0.2, 0.5, 0.8, 1],
               ease: "easeInOut"
             },
             rotate: {
-              duration: 1.5,
-              times: [0, 0.2, 0.5, 0.8, 1],
+              duration: isRevealed ? 2 : 1.5,
+              repeat: isRevealed ? Infinity : 0,
+              repeatType: "loop",
+              times: isRevealed ? [0, 0.2, 0.4, 0.6, 0.8, 1] : [0, 0.2, 0.5, 0.8, 1],
               ease: "easeInOut"
             }
           }}
@@ -160,13 +166,15 @@ const Hat: React.FC<HatProps> = ({
               animate={{ 
                 filter: isRevealed ? [
                   'brightness(1) drop-shadow(0 0 0px rgba(217, 70, 239, 0))', 
-                  'brightness(1.3) drop-shadow(0 0 15px rgba(217, 70, 239, 0.8))',
-                  'brightness(1.1) drop-shadow(0 0 8px rgba(217, 70, 239, 0.6))'
+                  'brightness(1.2) drop-shadow(0 0 10px rgba(217, 70, 239, 0.7))',
+                  'brightness(1) drop-shadow(0 0 5px rgba(217, 70, 239, 0.5))'
                 ] : 'brightness(1)'
               }}
               transition={{
                 filter: {
                   duration: 1.8,
+                  repeat: isRevealed ? Infinity : 0,
+                  repeatType: "reverse",
                   times: [0, 0.4, 1],
                   ease: "easeOut"
                 }
@@ -198,7 +206,7 @@ const Hat: React.FC<HatProps> = ({
               transition={{ 
                 duration: 1.5,
                 delay: i * 0.1 + 0.3,
-                repeat: 1,
+                repeat: Infinity,
                 repeatDelay: 0.5
               }}
               style={{
