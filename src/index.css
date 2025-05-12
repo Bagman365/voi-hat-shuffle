@@ -222,3 +222,44 @@
     text-align: center;
   }
 }
+
+/* Wallet dropdown customization */
+.wallet-dropdown {
+  animation: fadeInDown 0.3s ease-out;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Wallet button hover effect */
+.wallet-btn:hover {
+  box-shadow: 0 0 10px 2px rgba(155, 135, 245, 0.4);
+  transition: all 0.3s ease;
+}
+
+/* Wallet icons */
+.wallet-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #9b87f5, #7E69AB);
+}
+
+/* Full-width modal on small screens */
+@media (max-width: 480px) {
+  .wallet-dropdown-content {
+    width: 90vw !important;
+    left: 5vw !important;
+  }
+}
