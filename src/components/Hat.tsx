@@ -1,8 +1,11 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useIsMobile } from '@/hooks/use-mobile';
-import Confetti from 'react-confetti';
+import Confetti from './Confetti';
+import Sparkles from './Sparkles';
+import Character from './Character';
+import HatImage from './HatImage';
 
 interface HatProps {
   id: number;
@@ -25,25 +28,18 @@ const Hat: React.FC<HatProps> = ({
 }) => {
   const isMobile = useIsMobile();
   const [showConfetti, setShowConfetti] = useState(false);
-  const [confettiComplete, setConfettiComplete] = useState(false);
   
   // Calculate size based on screen size
   const hatSize = isMobile ? 
     (window.innerWidth < 400 ? 140 : 160) : // Reduced hat size on mobile
     300; // Size on desktop
   
-  // Reset effects when revealed state changes
-  useEffect(() => {
+  // Show confetti when revealed and has ball
+  React.useEffect(() => {
     if (isRevealed && hasBall) {
       setShowConfetti(true);
-      // Auto-hide effects after animation completes
-      const timer = setTimeout(() => {
-        setConfettiComplete(true);
-      }, 5000); // Increased duration for confetti
-      return () => clearTimeout(timer);
     } else {
       setShowConfetti(false);
-      setConfettiComplete(false);
     }
   }, [isRevealed, hasBall]);
   
@@ -77,147 +73,23 @@ const Hat: React.FC<HatProps> = ({
         perspective: '1000px'
       }}
     >
-      {/* Hat */}
-      <motion.div
-        className="w-full h-full flex items-center justify-center"
-        animate={{ 
-          rotateX: isRevealed ? 60 : 0, 
-          y: isRevealed ? -60 : 0,
-          z: isRevealed ? 40 : 0
-        }}
-        transition={{ 
-          duration: 0.4, 
-          type: "spring", 
-          stiffness: 260, 
-          damping: 20 
-        }}
-      >
-        <div className="w-full h-full relative flex items-center justify-center">
-          {/* VOI Hat Image */}
-          <img 
-            src="/lovable-uploads/33d63168-809a-455d-b6ef-d99fb90765fc.png" 
-            alt="VOI Hat" 
-            className="w-full h-full object-contain"
-          />
-        </div>
-      </motion.div>
+      {/* Hat Image */}
+      <HatImage isRevealed={isRevealed} />
       
-      {/* Enhanced Confetti when correct hat is revealed */}
-      {showConfetti && hasBall && isRevealed && !confettiComplete && (
-        <div className="absolute left-0 top-0 w-full h-full pointer-events-none" style={{ zIndex: 100 }}>
-          <Confetti
-            width={window.innerWidth}
-            height={window.innerHeight}
-            recycle={false}
-            numberOfPieces={250}
-            gravity={0.15}
-            colors={['#9b87f5', '#7E69AB', '#ffffff', '#ffdf00', '#ff9900', '#8f44fd']} 
-            initialVelocityY={-8}
-            confettiSource={{
-              x: position.x,
-              y: position.y - 100,
-              w: 0,
-              h: 0
-            }}
-          />
-        </div>
-      )}
+      {/* Confetti effect */}
+      <Confetti 
+        active={showConfetti && hasBall && isRevealed} 
+        position={position} 
+      />
       
-      {/* Happy character with continuous animation when revealed - now with higher z-index */}
-      {hasBall && (
-        <motion.div
-          className="absolute left-1/2 bottom-[15px] transform -translate-x-1/2"
-          style={{ zIndex: isRevealed ? 60 : 10 }} // Ensure it's on top when revealed
-          initial={{ scale: 0.1 }}
-          animate={{ 
-            scale: isRevealed ? [null, 1.1, 0.9, 1.1, 0.9, 1] : 0,
-            y: isRevealed ? [null, -10, 5, -10, 5, 0] : 0,
-            rotate: isRevealed ? [null, -5, 5, -5, 5, 0] : 0
-          }}
-          transition={{ 
-            scale: {
-              duration: isRevealed ? 2 : 1.2,
-              repeat: isRevealed ? Infinity : 0,
-              repeatType: "loop",
-              times: isRevealed ? [0, 0.2, 0.4, 0.6, 0.8, 1] : [0, 0.3, 0.6, 0.8, 1],
-              ease: "easeInOut",
-            },
-            y: { 
-              duration: isRevealed ? 2 : 1.5,
-              repeat: isRevealed ? Infinity : 0,
-              repeatType: "loop",
-              times: isRevealed ? [0, 0.2, 0.4, 0.6, 0.8, 1] : [0, 0.2, 0.5, 0.8, 1],
-              ease: "easeInOut"
-            },
-            rotate: {
-              duration: isRevealed ? 2 : 1.5,
-              repeat: isRevealed ? Infinity : 0,
-              repeatType: "loop",
-              times: isRevealed ? [0, 0.2, 0.4, 0.6, 0.8, 1] : [0, 0.2, 0.5, 0.8, 1],
-              ease: "easeInOut"
-            }
-          }}
-        >
-          <div className={`flex items-center justify-center ${isMobile ? 'w-[clamp(140px,30vw,180px)]' : 'w-[clamp(160px,30vw,240px)]'}`}>
-            <motion.img 
-              src="/lovable-uploads/109f7437-56fb-49eb-be2e-e5d8c0fe3780.png" 
-              alt="Happy Character" 
-              className="w-full h-auto object-contain"
-              animate={{ 
-                filter: isRevealed ? [
-                  'brightness(1) drop-shadow(0 0 0px rgba(217, 70, 239, 0))', 
-                  'brightness(1.2) drop-shadow(0 0 10px rgba(217, 70, 239, 0.7))',
-                  'brightness(1) drop-shadow(0 0 5px rgba(217, 70, 239, 0.5))'
-                ] : 'brightness(1)'
-              }}
-              transition={{
-                filter: {
-                  duration: 1.8,
-                  repeat: isRevealed ? Infinity : 0,
-                  repeatType: "reverse",
-                  times: [0, 0.4, 1],
-                  ease: "easeOut"
-                }
-              }}
-            />
-          </div>
-        </motion.div>
-      )}
+      {/* Character */}
+      <Character 
+        isVisible={hasBall} 
+        isRevealed={isRevealed} 
+      />
 
-      {/* Sparkles around the Happy character - also with higher z-index */}
-      {hasBall && isRevealed && (
-        <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none" style={{ zIndex: 70 }}>
-          {[...Array(8)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute rounded-full bg-white"
-              initial={{ 
-                x: 0, 
-                y: 0, 
-                scale: 0,
-                opacity: 0 
-              }}
-              animate={{ 
-                x: Math.cos(i * Math.PI / 4) * (isMobile ? 60 : 100),
-                y: Math.sin(i * Math.PI / 4) * (isMobile ? 60 : 100),
-                scale: [0, 1, 0],
-                opacity: [0, 1, 0]
-              }}
-              transition={{ 
-                duration: 1.5,
-                delay: i * 0.1 + 0.3,
-                repeat: Infinity,
-                repeatDelay: 0.5
-              }}
-              style={{
-                width: `${Math.random() * 10 + 5}px`,
-                height: `${Math.random() * 10 + 5}px`,
-                boxShadow: '0 0 10px 2px rgba(255, 255, 255, 0.8)'
-              }}
-            />
-          ))}
-        </div>
-      )}
+      {/* Sparkles */}
+      <Sparkles active={hasBall && isRevealed} />
     </motion.div>
   );
 };
