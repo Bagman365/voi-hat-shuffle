@@ -89,12 +89,12 @@ const Index = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-[#1A1F2C] to-[#0f1218]">
-      {/* Header */}
+      {/* Header with 25% larger text */}
       <header className="pt-6 pb-4 px-4 text-center">
-        <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-[#9b87f5] to-[#D946EF] text-transparent bg-clip-text mb-2">
-          VOI Hat Monte
+        <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-[#9b87f5] to-[#D946EF] text-transparent bg-clip-text mb-2">
+          VOI HAT MONTE
         </h1>
-        <p className="text-gray-400 max-w-md mx-auto">
+        <p className="text-lg md:text-xl text-gray-400 max-w-md mx-auto">
           Find the ball under the hat and win $VOI
         </p>
       </header>
