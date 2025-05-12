@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Hat from './Hat';
@@ -29,7 +28,9 @@ const GameBoard: React.FC<GameBoardProps> = ({
   
   // Calculate hat spacing based on screen size
   useEffect(() => {
-    const spacing = isMobile ? 180 : 380; // Reduced spacing on mobile
+    // Calculate spacing based on screen size to keep hats centered as a group
+    const spacing = isMobile ? 180 : 380;
+    
     setHatPositions([
       { x: -spacing, y: 0 },  // Left hat position
       { x: 0, y: 0 },         // Center hat position
@@ -146,19 +147,21 @@ const GameBoard: React.FC<GameBoardProps> = ({
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
       >
-        {/* Hats */}
+        {/* Hats container - centered as a group */}
         <div className="relative w-full h-full flex items-center justify-center">
-          {[0, 1, 2].map((hatId) => (
-            <Hat 
-              key={hatId}
-              id={hatId}
-              position={hatPositions[hatId] || { x: (hatId - 1) * 380, y: 0 }}
-              hasBall={hatId === ballPosition}
-              isRevealed={revealedHat === hatId}
-              onSelect={handleHatSelect}
-              isSelectable={!isShuffling && selectedHat === null && !isPlaying}
-            />
-          ))}
+          <div className="relative flex items-center justify-center">
+            {[0, 1, 2].map((hatId) => (
+              <Hat 
+                key={hatId}
+                id={hatId}
+                position={hatPositions[hatId] || { x: (hatId - 1) * 380, y: 0 }}
+                hasBall={hatId === ballPosition}
+                isRevealed={revealedHat === hatId}
+                onSelect={handleHatSelect}
+                isSelectable={!isShuffling && selectedHat === null && !isPlaying}
+              />
+            ))}
+          </div>
         </div>
       </motion.div>
       

@@ -108,7 +108,7 @@ const Index = () => {
             <div className="stars-bg"></div>
           </div>
           
-          <div className="relative z-10 w-full">
+          <div className="relative z-10 w-full flex justify-center">
             <GameBoard 
               isPlaying={isPlaying} 
               shuffleSpeed={shuffleSpeed}

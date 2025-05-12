@@ -34,11 +34,9 @@ const Hat: React.FC<HatProps> = ({
       onClick={() => isSelectable && onSelect(id)}
       whileHover={isSelectable ? { scale: 1.1, y: -10 } : {}}
       style={{
-        width: '300px', // Increased from 220px (approximately 36% larger)
-        height: '300px', // Increased from 220px
+        width: '300px',
+        height: '300px',
         position: 'absolute',
-        top: '50%',
-        left: '50%',
         transform: 'translate(-50%, -50%)',
       }}
     >
