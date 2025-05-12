@@ -5,6 +5,8 @@ import ControlsPanel from '@/components/ControlsPanel';
 import StatusPanel from '@/components/StatusPanel';
 import WalletPanel from '@/components/WalletPanel';
 import { useToast } from '@/components/ui/use-toast';
+import { Button } from '@/components/ui/button';
+import { Wallet } from 'lucide-react';
 
 const Index = () => {
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
@@ -89,14 +91,38 @@ const Index = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-[#1A1F2C] to-[#0f1218]">
-      {/* Header with 25% larger text */}
-      <header className="pt-6 pb-4 px-4 text-center">
-        <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-[#9b87f5] to-[#D946EF] text-transparent bg-clip-text mb-2">
-          VOI HAT MONTE
-        </h1>
-        <p className="text-lg md:text-xl text-gray-400 max-w-md mx-auto">
-          Find the ball under the hat and win $VOI
-        </p>
+      {/* Header with wallet button in top right */}
+      <header className="pt-6 pb-4 px-6 flex items-center justify-between">
+        <div className="flex-1">
+          {/* Empty div for flex spacing */}
+        </div>
+        
+        <div className="flex-1 text-center">
+          <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-[#9b87f5] to-[#D946EF] text-transparent bg-clip-text mb-2">
+            VOI HAT MONTE
+          </h1>
+          <p className="text-lg md:text-xl text-gray-400 max-w-md mx-auto">
+            Find the ball under the hat and win $VOI
+          </p>
+        </div>
+        
+        <div className="flex-1 flex justify-end">
+          {walletConnected ? (
+            <div className="flex flex-col items-end gap-1">
+              <span className="font-bold text-white">{balance} VOI</span>
+              <span className="text-xs text-gray-400 truncate max-w-[120px]">{walletAddress}</span>
+            </div>
+          ) : (
+            <Button 
+              onClick={handleConnectWallet}
+              variant="outline" 
+              className="border-purple-500 text-white hover:bg-purple-700/30"
+            >
+              <Wallet className="mr-2 h-4 w-4" />
+              Connect Wallet
+            </Button>
+          )}
+        </div>
       </header>
       
       {/* Main content - Game Board First */}
@@ -118,23 +144,21 @@ const Index = () => {
           </div>
         </div>
         
-        {/* Controls and status panels */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-          <StatusPanel wins={wins} streak={streak} />
-          <ControlsPanel 
-            onPlay={handlePlay}
-            isPlaying={isPlaying}
-            wagerAmount={wagerAmount}
-            onWagerChange={setWagerAmount}
-            shuffleSpeed={shuffleSpeed}
-            onShuffleSpeedChange={setShuffleSpeed}
-          />
-          <WalletPanel 
-            isConnected={walletConnected}
-            balance={balance}
-            address={walletAddress}
-            onConnect={handleConnectWallet}
-          />
+        {/* Controls and status panels - centered as one group */}
+        <div className="max-w-3xl mx-auto w-full mb-6">
+          <div className="grid grid-cols-1 gap-4">
+            <div className="flex flex-col md:flex-row gap-4 justify-center">
+              <StatusPanel wins={wins} streak={streak} />
+              <ControlsPanel 
+                onPlay={handlePlay}
+                isPlaying={isPlaying}
+                wagerAmount={wagerAmount}
+                onWagerChange={setWagerAmount}
+                shuffleSpeed={shuffleSpeed}
+                onShuffleSpeedChange={setShuffleSpeed}
+              />
+            </div>
+          </div>
         </div>
       </main>
       
