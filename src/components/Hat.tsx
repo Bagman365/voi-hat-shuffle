@@ -39,7 +39,7 @@ const Hat: React.FC<HatProps> = ({
       // Auto-hide confetti after animation completes
       const timer = setTimeout(() => {
         setConfettiComplete(true);
-      }, 4000); // Longer confetti duration (4 seconds)
+      }, 2000);
       return () => clearTimeout(timer);
     } else {
       setShowConfetti(false);
@@ -102,37 +102,14 @@ const Hat: React.FC<HatProps> = ({
         </div>
       </motion.div>
       
-      {/* Full-screen Confetti when correct hat is revealed */}
+      {/* Confetti when correct hat is revealed */}
       {showConfetti && hasBall && isRevealed && !confettiComplete && (
-        <div className="fixed inset-0 pointer-events-none z-50">
-          <Confetti
-            width={window.innerWidth}
-            height={window.innerHeight}
-            recycle={false}
-            numberOfPieces={200}
-            gravity={0.2}
-            colors={['#9b87f5', '#7E69AB', '#ffffff', '#ffdf00', '#D6BCFA']} // VOI brand colors + white + gold
-            confettiSource={{
-              x: window.innerWidth / 2,
-              y: -50, // Start slightly above screen for dramatic effect
-              w: window.innerWidth,
-              h: 0
-            }}
-            tweenDuration={5000}
-            initialVelocityY={3}
-            initialVelocityX={2}
-          />
-        </div>
-      )}
-      
-      {/* Local Confetti burst around the Happy character for added effect */}
-      {showConfetti && hasBall && isRevealed && !confettiComplete && (
-        <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none z-40">
+        <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none z-50">
           <Confetti
             width={window.innerWidth > 768 ? 300 : 250}
             height={window.innerHeight > 768 ? 300 : 250}
             recycle={false}
-            numberOfPieces={80}
+            numberOfPieces={150}
             gravity={0.25}
             colors={['#9b87f5', '#7E69AB', '#ffffff', '#ffdf00']} // VOI brand colors + white + yellow
             initialVelocityY={-5}
