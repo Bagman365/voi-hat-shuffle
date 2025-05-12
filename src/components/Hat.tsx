@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -28,18 +29,32 @@ const Hat: React.FC<HatProps> = ({
 }) => {
   const isMobile = useIsMobile();
   const [showConfetti, setShowConfetti] = useState(false);
+  const [showFireworks, setShowFireworks] = useState(false);
   
   // Calculate size based on screen size
   const hatSize = isMobile ? 
     (window.innerWidth < 400 ? 140 : 160) : // Reduced hat size on mobile
     300; // Size on desktop
   
-  // Show confetti when revealed and has ball
+  // Show effects when revealed and has ball
   React.useEffect(() => {
     if (isRevealed && hasBall) {
       setShowConfetti(true);
+      
+      // Trigger fireworks with a slight delay
+      setTimeout(() => {
+        setShowFireworks(true);
+      }, 300);
+      
+      // Auto-hide fireworks after animation completes
+      const hideTimer = setTimeout(() => {
+        setShowFireworks(false);
+      }, 3000);
+      
+      return () => clearTimeout(hideTimer);
     } else {
       setShowConfetti(false);
+      setShowFireworks(false);
     }
   }, [isRevealed, hasBall]);
   
@@ -92,7 +107,7 @@ const Hat: React.FC<HatProps> = ({
       <Sparkles active={hasBall && isRevealed} />
       
       {/* Fireworks */}
-      <Fireworks active={hasBall && isRevealed} />
+      <Fireworks active={showFireworks && hasBall && isRevealed} />
     </motion.div>
   );
 };
