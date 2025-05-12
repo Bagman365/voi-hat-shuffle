@@ -88,17 +88,21 @@ const Hat: React.FC<HatProps> = ({
       {hasBall && (
         <motion.div
           className="absolute left-1/2 bottom-[15px] transform -translate-x-1/2"
-          initial={{ scale: 0 }}
+          initial={{ scale: 0.2 }}
           animate={{ 
-            scale: isRevealed ? 1 : 0,
+            scale: isRevealed ? [0.2, 1.2, 1] : 0,
             y: isRevealed ? 5 : 0
           }}
           transition={{ 
-            duration: 0.4, 
-            delay: isRevealed ? 0.2 : 0,
-            type: "spring",
-            stiffness: 300,
-            damping: 20
+            scale: {
+              duration: 0.6,
+              times: [0, 0.5, 1],
+              ease: [0.34, 1.56, 0.64, 1], // Bounce/pop effect with cubic-bezier
+            },
+            y: { 
+              duration: 0.4, 
+              delay: isRevealed ? 0.2 : 0 
+            }
           }}
         >
           <div className={`flex items-center justify-center ${isMobile ? 'w-[clamp(60px,20vw,80px)]' : 'w-[clamp(80px,10vw,120px)]'}`}>
@@ -106,7 +110,10 @@ const Hat: React.FC<HatProps> = ({
               src="/lovable-uploads/109f7437-56fb-49eb-be2e-e5d8c0fe3780.png" 
               alt="Happy Character" 
               className="w-full h-auto object-contain"
-              style={{ filter: 'drop-shadow(0 0 8px rgba(217, 70, 239, 0.6))' }}
+              style={{ 
+                filter: isRevealed ? 'drop-shadow(0 0 8px rgba(217, 70, 239, 0.6)) drop-shadow(0 0 12px rgba(255, 202, 40, 0.4))' : 'drop-shadow(0 0 8px rgba(217, 70, 239, 0.6))',
+                transition: 'filter 0.3s ease-in-out'
+              }}
             />
           </div>
         </motion.div>
