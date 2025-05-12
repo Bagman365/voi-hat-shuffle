@@ -10,7 +10,10 @@ const HatImage: React.FC<HatImageProps> = ({ isRevealed }) => {
   return (
     <motion.div
       className="w-full h-full flex items-center justify-center"
-      style={{ zIndex: isRevealed ? 20 : 30 }} // Lower z-index when revealed
+      style={{ 
+        zIndex: isRevealed ? 10 : 30, // Even lower z-index when revealed
+        opacity: isRevealed ? 0.9 : 1 // Slightly reduce opacity when revealed
+      }}
       animate={{ 
         rotateX: isRevealed ? 60 : 0, 
         y: isRevealed ? -60 : 0,
