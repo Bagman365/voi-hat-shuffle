@@ -74,17 +74,16 @@ const Hat: React.FC<HatProps> = ({
           damping: 20 
         }}
       >
-        <div className="w-full h-full relative">
-          {/* Hat Base */}
-          <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-[80%] h-[20%] bg-[#9b87f5] dark:bg-[#33C3F0] rounded-full shadow-lg"></div>
-          
-          {/* Hat Top */}
-          <div className="absolute bottom-[19%] left-1/2 transform -translate-x-1/2 w-[70%] h-[55%] bg-[#1A1F2C] rounded-t-[180px] shadow-inner"></div>
-          
-          {/* VOI Logo on Hat */}
-          <div className="absolute bottom-[40%] left-1/2 transform -translate-x-1/2 text-white font-bold text-center text-3xl md:text-3xl text-[min(3vw,24px)]">
-            VOI
-          </div>
+        <div className="w-full h-full relative flex items-center justify-center">
+          {/* Custom VOI Hat Image */}
+          <img 
+            src="/lovable-uploads/ccbefbda-4dbc-4db2-89f4-644ab1b902ff.png" 
+            alt="VOI Hat" 
+            className="w-[85%] h-auto object-contain filter drop-shadow-lg"
+            style={{
+              filter: 'drop-shadow(0px 4px 8px rgba(0, 0, 0, 0.3))'
+            }}
+          />
         </div>
       </motion.div>
       
