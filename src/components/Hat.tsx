@@ -26,7 +26,7 @@ const Hat: React.FC<HatProps> = ({
   
   // Calculate size based on screen size
   const hatSize = isMobile ? 
-    (window.innerWidth < 400 ? 220 : 260) : // Smaller hats on mobile
+    (window.innerWidth < 400 ? 160 : 200) : // Reduced hat size on mobile (~40% reduction)
     390; // Original size on desktop
   
   return (
@@ -105,8 +105,8 @@ const Hat: React.FC<HatProps> = ({
             damping: 20
           }}
         >
-          <div className={`${isMobile ? 'w-[80px] h-[80px]' : 'w-[130px] h-[130px]'} bg-[#D946EF] rounded-full shadow-lg flex items-center justify-center`}>
-            <div className={`${isMobile ? 'w-[70px] h-[70px]' : 'w-[120px] h-[120px]'} bg-[#D946EF] rounded-full shadow-inner glow-effect`}></div>
+          <div className={`${isMobile ? 'w-[60px] h-[60px]' : 'w-[130px] h-[130px]'} bg-[#D946EF] rounded-full shadow-lg flex items-center justify-center`}>
+            <div className={`${isMobile ? 'w-[52px] h-[52px]' : 'w-[120px] h-[120px]'} bg-[#D946EF] rounded-full shadow-inner glow-effect`}></div>
           </div>
         </motion.div>
       )}

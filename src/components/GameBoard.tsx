@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Hat from './Hat';
@@ -30,22 +29,16 @@ const GameBoard: React.FC<GameBoardProps> = ({
   // Calculate hat spacing based on screen size
   useEffect(() => {
     if (isMobile) {
-      // Mobile: Vertical layout for very small screens, triangular for slightly larger
-      if (window.innerWidth < 400) {
-        // Extra small screens: vertical stack
-        setHatPositions([
-          { x: 0, y: -180 },  // Top hat position
-          { x: 0, y: 0 },     // Middle hat position
-          { x: 0, y: 180 }    // Bottom hat position
-        ]);
-      } else {
-        // Small screens: triangular layout
-        setHatPositions([
-          { x: -100, y: -80 },  // Top left hat position
-          { x: 100, y: -80 },   // Top right hat position 
-          { x: 0, y: 80 }      // Bottom center hat position
-        ]);
-      }
+      // Mobile: Use a triangular layout (2 on top, 1 on bottom)
+      const topRowY = -80; // Y position for the top row hats
+      const bottomRowY = 80; // Y position for the bottom row hat
+      const horizontalSpacing = window.innerWidth < 400 ? 80 : 100; // Adjust for very small screens
+      
+      setHatPositions([
+        { x: -horizontalSpacing, y: topRowY },  // Top left hat position
+        { x: horizontalSpacing, y: topRowY },   // Top right hat position 
+        { x: 0, y: bottomRowY }                 // Bottom center hat position
+      ]);
     } else {
       // Desktop: Horizontal layout with more space
       const spacing = 490;
@@ -84,21 +77,16 @@ const GameBoard: React.FC<GameBoardProps> = ({
     
     // Reset hat positions based on current screen size
     if (isMobile) {
-      if (window.innerWidth < 400) {
-        // Extra small screens
-        setHatPositions([
-          { x: 0, y: -180 },
-          { x: 0, y: 0 },
-          { x: 0, y: 180 }
-        ]);
-      } else {
-        // Small screens, triangular layout
-        setHatPositions([
-          { x: -120, y: -50 },
-          { x: 120, y: -50 },
-          { x: 0, y: 120 }
-        ]);
-      }
+      // Mobile: Use triangular layout (2 on top, 1 on bottom)
+      const topRowY = -80;
+      const bottomRowY = 80;
+      const horizontalSpacing = window.innerWidth < 400 ? 80 : 100;
+      
+      setHatPositions([
+        { x: -horizontalSpacing, y: topRowY },  // Top left
+        { x: horizontalSpacing, y: topRowY },   // Top right
+        { x: 0, y: bottomRowY }                 // Bottom center
+      ]);
     } else {
       const spacing = 490;
       setHatPositions([
@@ -176,7 +164,7 @@ const GameBoard: React.FC<GameBoardProps> = ({
   };
   
   return (
-    <div className={`relative w-full ${isMobile ? 'h-[600px]' : 'h-[650px]'} flex items-center justify-center`}>
+    <div className={`relative w-full ${isMobile ? 'h-[500px]' : 'h-[650px]'} flex items-center justify-center mb-10`}>
       {/* Game area */}
       <motion.div 
         className="relative w-full max-w-[1200px] h-full flex items-center justify-center"

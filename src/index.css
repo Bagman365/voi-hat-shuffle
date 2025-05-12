@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -130,29 +131,34 @@
     
     /* Enhanced mobile hat layout */
     .hat-container {
-      gap: 1.25rem;
-      padding: 1rem;
+      gap: 1.5rem;
+      padding: 1.5rem;
     }
 
+    /* Triangular layout (2 on top, 1 on bottom) */
     .hat-grid-triangular {
       display: grid;
       grid-template-columns: 1fr 1fr;
       grid-template-rows: auto auto;
-      gap: 1.25rem;
+      gap: 2rem;
       place-items: center;
+      margin-bottom: 1.5rem;
     }
     
     .hat-grid-triangular > div:last-child {
       grid-column: span 2;
-      margin-top: 0.75rem;
+      margin-top: 1rem;
     }
     
-    .hat-stack-vertical {
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-      align-items: center;
-      justify-content: center;
+    /* Individual hat tappability improvements */
+    .hat-wrapper {
+      padding: 0.75rem;
+      touch-action: manipulation;
+    }
+    
+    /* Space between hats and controls */
+    .game-board-container {
+      margin-bottom: 2rem;
     }
   }
 }
@@ -237,16 +243,23 @@
   .mobile-stack {
     flex-direction: column;
     align-items: center;
-    gap: 1rem;
+    gap: 1.25rem;
   }
   
   .mobile-compact {
-    padding: 0.5rem !important;
-    margin: 0.5rem !important;
+    padding: 0.75rem !important;
+    margin: 0.75rem !important;
   }
   
   .mobile-text-center {
     text-align: center;
+  }
+  
+  /* Improved hat layout spacing */
+  .hat-area {
+    padding-top: 1rem;
+    padding-bottom: 2rem;
+    gap: 1.5rem;
   }
 }
 
@@ -326,6 +339,11 @@
   /* Mobile wallet optimizations */
   .wallet-pill {
     font-size: 0.875rem;
+  }
+  
+  /* Hat distance from wallet */
+  .mobile-hat-spacing {
+    margin-top: 2rem;
   }
 }
 
