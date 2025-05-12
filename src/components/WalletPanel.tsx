@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/dialog";
 import walletService, { WalletProvider } from '@/services/walletService';
 import { useToast } from '@/hooks/use-toast';
-import { useIsMobile } from '@/hooks/use-mobile';
 
 interface WalletPanelProps {
   isConnected: boolean;
@@ -27,7 +26,6 @@ const WalletPanel: React.FC<WalletPanelProps> = ({
   onConnect 
 }) => {
   const { toast } = useToast();
-  const isMobile = useIsMobile();
   const [showWalletOptions, setShowWalletOptions] = useState(false);
   const [walletOptions, setWalletOptions] = useState<{
     hasVera: boolean;
@@ -85,9 +83,9 @@ const WalletPanel: React.FC<WalletPanelProps> = ({
   };
 
   return (
-    <div className={`flex ${isMobile ? 'flex-col' : 'flex-row'} items-${isMobile ? 'end' : 'center'} gap-3`}>
+    <div className="flex flex-row items-center gap-3 justify-end">
       {isConnected ? (
-        <div className={`flex ${isMobile ? 'flex-col items-end' : 'items-center gap-3'}`}>
+        <div className="flex items-center gap-3">
           <div className="flex flex-col items-end">
             <div className="text-white">
               <span className="text-sm text-gray-300">Balance:</span>{" "}
@@ -97,7 +95,6 @@ const WalletPanel: React.FC<WalletPanelProps> = ({
               {truncateAddress(address)}
             </div>
           </div>
-          {isMobile && <div className="h-2"></div>} {/* Spacer for mobile */}
           <Button
             onClick={handleDisconnect}
             variant="outline"
