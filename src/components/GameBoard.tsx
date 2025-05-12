@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Hat from './Hat';
 import ResultMessage from './ResultMessage';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface GameBoardProps {
   isPlaying: boolean;
@@ -17,17 +18,24 @@ const GameBoard: React.FC<GameBoardProps> = ({
   onGameComplete,
   wagerAmount
 }) => {
+  const isMobile = useIsMobile();
   const [ballPosition, setBallPosition] = useState<number>(0);
-  const [hatPositions, setHatPositions] = useState<Array<{x: number, y: number}>>([
-    { x: -300, y: 0 }, // Left hat position
-    { x: 0, y: 0 },    // Center hat position
-    { x: 300, y: 0 }   // Right hat position
-  ]);
+  const [hatPositions, setHatPositions] = useState<Array<{x: number, y: number}>>([]);
   const [isShuffling, setIsShuffling] = useState<boolean>(false);
   const [selectedHat, setSelectedHat] = useState<number | null>(null);
   const [revealedHat, setRevealedHat] = useState<number | null>(null);
   const [showResult, setShowResult] = useState<boolean>(false);
   const [won, setWon] = useState<boolean>(false);
+  
+  // Calculate hat spacing based on screen size
+  useEffect(() => {
+    const spacing = isMobile ? 180 : 380; // Reduced spacing on mobile
+    setHatPositions([
+      { x: -spacing, y: 0 },  // Left hat position
+      { x: 0, y: 0 },         // Center hat position
+      { x: spacing, y: 0 }    // Right hat position
+    ]);
+  }, [isMobile]);
   
   // Determine shuffle duration based on speed
   const getShuffleDuration = () => {
@@ -54,11 +62,12 @@ const GameBoard: React.FC<GameBoardProps> = ({
     const randomPosition = Math.floor(Math.random() * 3);
     setBallPosition(randomPosition);
     
-    // Reset hat positions
+    // Reset hat positions based on current screen size
+    const spacing = isMobile ? 180 : 380;
     setHatPositions([
-      { x: -300, y: 0 }, // Left hat position
-      { x: 0, y: 0 },    // Center hat position
-      { x: 300, y: 0 }   // Right hat position
+      { x: -spacing, y: 0 },  // Left hat position
+      { x: 0, y: 0 },         // Center hat position
+      { x: spacing, y: 0 }    // Right hat position
     ]);
     
     // Start shuffling after a brief delay
@@ -129,10 +138,10 @@ const GameBoard: React.FC<GameBoardProps> = ({
   };
   
   return (
-    <div className="relative w-full h-[500px] flex items-center justify-center">
+    <div className="relative w-full h-[600px] flex items-center justify-center">
       {/* Game area */}
       <motion.div 
-        className="relative w-full max-w-[900px] h-[400px] flex items-center justify-center"
+        className="relative w-full max-w-[1200px] h-[500px] flex items-center justify-center"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
@@ -143,7 +152,7 @@ const GameBoard: React.FC<GameBoardProps> = ({
             <Hat 
               key={hatId}
               id={hatId}
-              position={hatPositions[hatId]}
+              position={hatPositions[hatId] || { x: (hatId - 1) * 380, y: 0 }}
               hasBall={hatId === ballPosition}
               isRevealed={revealedHat === hatId}
               onSelect={handleHatSelect}

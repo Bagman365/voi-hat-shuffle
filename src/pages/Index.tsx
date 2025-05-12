@@ -101,8 +101,8 @@ const Index = () => {
       
       {/* Main content - Game Board First */}
       <main className="flex-1 container mx-auto px-4 flex flex-col">
-        {/* Game board */}
-        <div className="flex-1 flex items-center justify-center relative overflow-hidden mb-6">
+        {/* Game board with increased vertical space */}
+        <div className="flex-1 flex items-center justify-center relative overflow-hidden mb-8">
           {/* Galaxy background effect */}
           <div className="absolute inset-0 overflow-hidden">
             <div className="stars-bg"></div>
