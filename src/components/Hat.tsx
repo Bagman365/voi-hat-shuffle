@@ -84,7 +84,7 @@ const Hat: React.FC<HatProps> = ({
         </div>
       </motion.div>
       
-      {/* Ball (only visible when revealed) */}
+      {/* Happy character (replacing the ball) */}
       {hasBall && (
         <motion.div
           className="absolute left-1/2 bottom-[15px] transform -translate-x-1/2"
@@ -101,8 +101,13 @@ const Hat: React.FC<HatProps> = ({
             damping: 20
           }}
         >
-          <div className={`${isMobile ? 'w-[60px] h-[60px]' : 'w-[100px] h-[100px]'} bg-[#D946EF] rounded-full shadow-lg flex items-center justify-center`}>
-            <div className={`${isMobile ? 'w-[52px] h-[52px]' : 'w-[90px] h-[90px]'} bg-[#D946EF] rounded-full shadow-inner glow-effect`}></div>
+          <div className={`flex items-center justify-center ${isMobile ? 'w-[clamp(60px,20vw,80px)]' : 'w-[clamp(80px,10vw,120px)]'}`}>
+            <img 
+              src="/lovable-uploads/109f7437-56fb-49eb-be2e-e5d8c0fe3780.png" 
+              alt="Happy Character" 
+              className="w-full h-auto object-contain"
+              style={{ filter: 'drop-shadow(0 0 8px rgba(217, 70, 239, 0.6))' }}
+            />
           </div>
         </motion.div>
       )}
