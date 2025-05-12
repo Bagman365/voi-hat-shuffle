@@ -90,12 +90,12 @@ const Index = () => {
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-[#1A1F2C] to-[#0f1218]">
       {/* Header */}
-      <header className="pt-6 pb-8 px-4 text-center">
+      <header className="pt-6 pb-4 px-4 text-center">
         <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-[#9b87f5] to-[#D946EF] text-transparent bg-clip-text mb-2">
           VOI Hat Monte
         </h1>
         <p className="text-gray-400 max-w-md mx-auto">
-          Find the ball under the hat and win VOI tokens!
+          Find the ball under the hat and win $VOI
         </p>
       </header>
       
@@ -118,7 +118,7 @@ const Index = () => {
           </div>
         </div>
         
-        {/* Controls and status panels moved below */}
+        {/* Controls and status panels */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
           <StatusPanel wins={wins} streak={streak} />
           <ControlsPanel 

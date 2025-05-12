@@ -21,7 +21,7 @@ const Hat: React.FC<HatProps> = ({
 }) => {
   return (
     <motion.div
-      className={`relative cursor-pointer transition-transform duration-300 transform ${
+      className={`absolute cursor-pointer transition-transform duration-300 transform ${
         isSelectable ? 'hover:scale-110' : ''
       }`}
       initial={{ scale: 1, y: 0 }}
@@ -34,9 +34,12 @@ const Hat: React.FC<HatProps> = ({
       onClick={() => isSelectable && onSelect(id)}
       whileHover={isSelectable ? { scale: 1.1, y: -10 } : {}}
       style={{
-        width: '220px',  // Further increased from 200px
-        height: '220px', // Further increased from 200px
+        width: '220px',
+        height: '220px',
         position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
       }}
     >
       {/* Hat */}
@@ -62,11 +65,13 @@ const Hat: React.FC<HatProps> = ({
       {/* Ball (only visible when revealed) */}
       {hasBall && (
         <motion.div
-          className="absolute left-1/2 bottom-[5px] transform -translate-x-1/2 w-[70px] h-[70px] bg-[#D946EF] rounded-full shadow-lg"
+          className="absolute left-1/2 bottom-[5px] transform -translate-x-1/2"
           initial={{ scale: 0 }}
           animate={{ scale: isRevealed ? 1 : 0 }}
           transition={{ duration: 0.3, delay: isRevealed ? 0.2 : 0 }}
-        />
+        >
+          <div className="w-[70px] h-[70px] bg-[#D946EF] rounded-full shadow-lg" />
+        </motion.div>
       )}
     </motion.div>
   );

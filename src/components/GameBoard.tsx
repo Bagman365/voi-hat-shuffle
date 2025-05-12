@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Hat from './Hat';
@@ -18,9 +19,9 @@ const GameBoard: React.FC<GameBoardProps> = ({
 }) => {
   const [ballPosition, setBallPosition] = useState<number>(0);
   const [hatPositions, setHatPositions] = useState<Array<{x: number, y: number}>>([
-    { x: -250, y: 0 }, // Further increased spacing
-    { x: 0, y: 0 }, 
-    { x: 250, y: 0 }   // Further increased spacing
+    { x: -300, y: 0 }, // Left hat position
+    { x: 0, y: 0 },    // Center hat position
+    { x: 300, y: 0 }   // Right hat position
   ]);
   const [isShuffling, setIsShuffling] = useState<boolean>(false);
   const [selectedHat, setSelectedHat] = useState<number | null>(null);
@@ -53,11 +54,11 @@ const GameBoard: React.FC<GameBoardProps> = ({
     const randomPosition = Math.floor(Math.random() * 3);
     setBallPosition(randomPosition);
     
-    // Reset hat positions with wider spacing
+    // Reset hat positions
     setHatPositions([
-      { x: -250, y: 0 }, // Further increased spacing
-      { x: 0, y: 0 }, 
-      { x: 250, y: 0 }   // Further increased spacing
+      { x: -300, y: 0 }, // Left hat position
+      { x: 0, y: 0 },    // Center hat position
+      { x: 300, y: 0 }   // Right hat position
     ]);
     
     // Start shuffling after a brief delay
@@ -131,23 +132,25 @@ const GameBoard: React.FC<GameBoardProps> = ({
     <div className="relative w-full h-[500px] flex items-center justify-center">
       {/* Game area */}
       <motion.div 
-        className="relative w-full max-w-[800px] h-[400px]"
+        className="relative w-full max-w-[900px] h-[400px] flex items-center justify-center"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
       >
         {/* Hats */}
-        {[0, 1, 2].map((hatId) => (
-          <Hat 
-            key={hatId}
-            id={hatId}
-            position={hatPositions[hatId]}
-            hasBall={hatId === ballPosition}
-            isRevealed={revealedHat === hatId}
-            onSelect={handleHatSelect}
-            isSelectable={!isShuffling && selectedHat === null && !isPlaying}
-          />
-        ))}
+        <div className="relative w-full h-full flex items-center justify-center">
+          {[0, 1, 2].map((hatId) => (
+            <Hat 
+              key={hatId}
+              id={hatId}
+              position={hatPositions[hatId]}
+              hasBall={hatId === ballPosition}
+              isRevealed={revealedHat === hatId}
+              onSelect={handleHatSelect}
+              isSelectable={!isShuffling && selectedHat === null && !isPlaying}
+            />
+          ))}
+        </div>
       </motion.div>
       
       {/* Result message */}
