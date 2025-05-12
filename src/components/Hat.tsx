@@ -39,7 +39,7 @@ const Hat: React.FC<HatProps> = ({
       // Auto-hide effects after animation completes
       const timer = setTimeout(() => {
         setConfettiComplete(true);
-      }, 2000);
+      }, 5000); // Increased duration for confetti
       return () => clearTimeout(timer);
     } else {
       setShowConfetti(false);
@@ -102,21 +102,20 @@ const Hat: React.FC<HatProps> = ({
         </div>
       </motion.div>
       
-      {/* Confetti when correct hat is revealed */}
+      {/* Enhanced Confetti when correct hat is revealed */}
       {showConfetti && hasBall && isRevealed && !confettiComplete && (
-        <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none z-50">
+        <div className="absolute left-0 top-0 w-full h-full pointer-events-none" style={{ zIndex: 100 }}>
           <Confetti
-            width={window.innerWidth > 768 ? 300 : 250}
-            height={window.innerHeight > 768 ? 300 : 250}
+            width={window.innerWidth}
+            height={window.innerHeight}
             recycle={false}
-            numberOfPieces={150}
-            gravity={0.25}
-            colors={['#9b87f5', '#7E69AB', '#ffffff', '#ffdf00']} // VOI brand colors + white + yellow
-            initialVelocityY={-5}
-            initialVelocityX={2}
+            numberOfPieces={250}
+            gravity={0.15}
+            colors={['#9b87f5', '#7E69AB', '#ffffff', '#ffdf00', '#ff9900', '#8f44fd']} 
+            initialVelocityY={-8}
             confettiSource={{
-              x: window.innerWidth > 768 ? 150 : 125,
-              y: window.innerHeight > 768 ? 150 : 125,
+              x: position.x,
+              y: position.y - 100,
               w: 0,
               h: 0
             }}
@@ -124,10 +123,11 @@ const Hat: React.FC<HatProps> = ({
         </div>
       )}
       
-      {/* Happy character with continuous animation when revealed */}
+      {/* Happy character with continuous animation when revealed - now with higher z-index */}
       {hasBall && (
         <motion.div
-          className="absolute left-1/2 bottom-[15px] transform -translate-x-1/2 z-10"
+          className="absolute left-1/2 bottom-[15px] transform -translate-x-1/2"
+          style={{ zIndex: isRevealed ? 60 : 10 }} // Ensure it's on top when revealed
           initial={{ scale: 0.1 }}
           animate={{ 
             scale: isRevealed ? [null, 1.1, 0.9, 1.1, 0.9, 1] : 0,
@@ -184,9 +184,9 @@ const Hat: React.FC<HatProps> = ({
         </motion.div>
       )}
 
-      {/* Sparkles around the Happy character */}
+      {/* Sparkles around the Happy character - also with higher z-index */}
       {hasBall && isRevealed && (
-        <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none z-20">
+        <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none" style={{ zIndex: 70 }}>
           {[...Array(8)].map((_, i) => (
             <motion.div
               key={i}

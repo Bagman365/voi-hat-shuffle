@@ -5,15 +5,16 @@ import { useIsMobile } from '@/hooks/use-mobile';
 
 interface BallProps {
   visible: boolean;
+  isTopLayer?: boolean;
 }
 
-const Ball: React.FC<BallProps> = ({ visible }) => {
+const Ball: React.FC<BallProps> = ({ visible, isTopLayer = false }) => {
   const isMobile = useIsMobile();
   const size = isMobile ? 'w-[clamp(140px,30vw,180px)]' : 'w-[clamp(160px,30vw,240px)]';
   
   return (
     <motion.div
-      className={`${size} h-auto relative`}
+      className={`${size} h-auto relative ${isTopLayer ? 'z-50' : ''}`}
       initial={{ scale: 0.1 }}
       animate={{ 
         scale: visible ? [null, 1.1, 0.9, 1.1, 0.9, 1] : 0,
