@@ -4,8 +4,7 @@ import ControlsPanel from '@/components/ControlsPanel';
 import StatusPanel from '@/components/StatusPanel';
 import WalletPanel from '@/components/WalletPanel';
 import { useToast } from '@/components/ui/use-toast';
-import { Button } from '@/components/ui/button';
-import { Wallet } from 'lucide-react';
+import walletService from '@/services/walletService';
 
 const Index = () => {
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
@@ -17,6 +16,32 @@ const Index = () => {
   const [balance, setBalance] = useState<number>(100);
   const [walletAddress, setWalletAddress] = useState<string>('0x1234...abcd');
   const { toast } = useToast();
+
+  // Check wallet connection status on load
+  useEffect(() => {
+    const checkCurrentWallet = async () => {
+      const currentWallet = walletService.getCurrentWallet();
+      if (currentWallet) {
+        setWalletConnected(true);
+        setBalance(currentWallet.balance);
+        setWalletAddress(currentWallet.address);
+      }
+    };
+    
+    checkCurrentWallet();
+    
+    // Set up polling to refresh balance periodically
+    const balanceInterval = setInterval(async () => {
+      if (walletConnected) {
+        const newBalance = await walletService.refreshBalance();
+        if (newBalance !== null) {
+          setBalance(newBalance);
+        }
+      }
+    }, 30000); // Check every 30 seconds
+    
+    return () => clearInterval(balanceInterval);
+  }, [walletConnected]);
 
   // Simulate game timer
   useEffect(() => {
@@ -80,18 +105,22 @@ const Index = () => {
     }
   };
 
-  const handleConnectWallet = () => {
+  const handleConnectWallet = async () => {
+    // Let WalletPanel handle the connection flow
     setWalletConnected(true);
-    toast({
-      title: "Wallet Connected",
-      description: "Your VOI wallet has been connected successfully.",
-    });
+    
+    // Update address and balance with actual wallet info
+    const wallet = walletService.getCurrentWallet();
+    if (wallet) {
+      setWalletAddress(wallet.address);
+      setBalance(wallet.balance);
+    }
   };
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-[#1A1F2C] to-[#0f1218]">
       {/* Header with wallet button in top right */}
-      <header className="pt-8 pb-6 px-6 flex items-center justify-between"> {/* Added more top padding */}
+      <header className="pt-8 pb-6 px-6 flex items-center justify-between">
         <div className="flex-1">
           {/* Empty div for flex spacing */}
         </div>
@@ -105,29 +134,20 @@ const Index = () => {
           </p>
         </div>
         
-        <div className="flex-1 flex justify-end">
-          {walletConnected ? (
-            <div className="flex flex-col items-end gap-1">
-              <span className="font-bold text-white">{balance} VOI</span>
-              <span className="text-xs text-gray-400 truncate max-w-[120px]">{walletAddress}</span>
-            </div>
-          ) : (
-            <Button 
-              onClick={handleConnectWallet}
-              variant="outline" 
-              className="border-purple-500 text-white hover:bg-purple-700/30"
-            >
-              <Wallet className="mr-2 h-4 w-4" />
-              Connect Wallet
-            </Button>
-          )}
+        <div className="flex-1 flex justify-end items-start">
+          <WalletPanel 
+            isConnected={walletConnected}
+            balance={balance}
+            address={walletAddress}
+            onConnect={handleConnectWallet}
+          />
         </div>
       </header>
       
       {/* Main content - Game Board First */}
       <main className="flex-1 container mx-auto px-4 flex flex-col">
         {/* Game board with increased vertical space */}
-        <div className="flex-1 flex items-center justify-center relative overflow-hidden mb-10"> {/* Increased bottom margin */}
+        <div className="flex-1 flex items-center justify-center relative overflow-hidden mb-10">
           {/* Galaxy background effect */}
           <div className="absolute inset-0 overflow-hidden">
             <div className="stars-bg"></div>
@@ -144,8 +164,8 @@ const Index = () => {
         </div>
         
         {/* Controls and status panels - centered as one group */}
-        <div className="max-w-3xl mx-auto w-full mb-8"> {/* Increased bottom margin */}
-          <div className="grid grid-cols-1 gap-6"> {/* Increased gap */}
+        <div className="max-w-3xl mx-auto w-full mb-8">
+          <div className="grid grid-cols-1 gap-6">
             <div className="flex flex-col md:flex-row gap-5 justify-center">
               <StatusPanel wins={wins} streak={streak} />
               <ControlsPanel 
@@ -162,7 +182,7 @@ const Index = () => {
       </main>
       
       {/* Footer */}
-      <footer className="py-6 px-6 text-center text-gray-500 text-sm"> {/* Increased padding */}
+      <footer className="py-6 px-6 text-center text-gray-500 text-sm">
         Made with ❤️ for VOI.Network • v0.1.0
       </footer>
     </div>
