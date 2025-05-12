@@ -29,7 +29,7 @@ const GameBoard: React.FC<GameBoardProps> = ({
   // Calculate hat spacing based on screen size
   useEffect(() => {
     // Calculate spacing based on screen size to keep hats centered as a group
-    const spacing = isMobile ? 180 : 380;
+    const spacing = isMobile ? 220 : 480; // Increased spacing for larger hats
     
     setHatPositions([
       { x: -spacing, y: 0 },  // Left hat position
@@ -64,7 +64,7 @@ const GameBoard: React.FC<GameBoardProps> = ({
     setBallPosition(randomPosition);
     
     // Reset hat positions based on current screen size
-    const spacing = isMobile ? 180 : 380;
+    const spacing = isMobile ? 220 : 480; // Increased spacing for larger hats
     setHatPositions([
       { x: -spacing, y: 0 },  // Left hat position
       { x: 0, y: 0 },         // Center hat position
@@ -139,10 +139,10 @@ const GameBoard: React.FC<GameBoardProps> = ({
   };
   
   return (
-    <div className="relative w-full h-[600px] flex items-center justify-center">
+    <div className="relative w-full h-[650px] flex items-center justify-center"> {/* Increased height for larger hats */}
       {/* Game area */}
       <motion.div 
-        className="relative w-full max-w-[1200px] h-[500px] flex items-center justify-center"
+        className="relative w-full max-w-[1200px] h-[600px] flex items-center justify-center" {/* Increased height */}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
@@ -154,7 +154,7 @@ const GameBoard: React.FC<GameBoardProps> = ({
               <Hat 
                 key={hatId}
                 id={hatId}
-                position={hatPositions[hatId] || { x: (hatId - 1) * 380, y: 0 }}
+                position={hatPositions[hatId] || { x: (hatId - 1) * 480, y: 0 }} {/* Adjusted default spacing */}
                 hasBall={hatId === ballPosition}
                 isRevealed={revealedHat === hatId}
                 onSelect={handleHatSelect}

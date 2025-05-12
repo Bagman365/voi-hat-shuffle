@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import GameBoard from '@/components/GameBoard';
 import ControlsPanel from '@/components/ControlsPanel';
@@ -92,7 +91,7 @@ const Index = () => {
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-[#1A1F2C] to-[#0f1218]">
       {/* Header with wallet button in top right */}
-      <header className="pt-6 pb-4 px-6 flex items-center justify-between">
+      <header className="pt-8 pb-6 px-6 flex items-center justify-between"> {/* Added more top padding */}
         <div className="flex-1">
           {/* Empty div for flex spacing */}
         </div>
@@ -128,7 +127,7 @@ const Index = () => {
       {/* Main content - Game Board First */}
       <main className="flex-1 container mx-auto px-4 flex flex-col">
         {/* Game board with increased vertical space */}
-        <div className="flex-1 flex items-center justify-center relative overflow-hidden mb-8">
+        <div className="flex-1 flex items-center justify-center relative overflow-hidden mb-10"> {/* Increased bottom margin */}
           {/* Galaxy background effect */}
           <div className="absolute inset-0 overflow-hidden">
             <div className="stars-bg"></div>
@@ -145,9 +144,9 @@ const Index = () => {
         </div>
         
         {/* Controls and status panels - centered as one group */}
-        <div className="max-w-3xl mx-auto w-full mb-6">
-          <div className="grid grid-cols-1 gap-4">
-            <div className="flex flex-col md:flex-row gap-4 justify-center">
+        <div className="max-w-3xl mx-auto w-full mb-8"> {/* Increased bottom margin */}
+          <div className="grid grid-cols-1 gap-6"> {/* Increased gap */}
+            <div className="flex flex-col md:flex-row gap-5 justify-center">
               <StatusPanel wins={wins} streak={streak} />
               <ControlsPanel 
                 onPlay={handlePlay}
@@ -163,7 +162,7 @@ const Index = () => {
       </main>
       
       {/* Footer */}
-      <footer className="py-4 px-6 text-center text-gray-500 text-sm">
+      <footer className="py-6 px-6 text-center text-gray-500 text-sm"> {/* Increased padding */}
         Made with ❤️ for VOI.Network • v0.1.0
       </footer>
     </div>
