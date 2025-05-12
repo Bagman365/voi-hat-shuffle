@@ -26,23 +26,26 @@ const Hat: React.FC<HatProps> = ({
   const isMobile = useIsMobile();
   const [showConfetti, setShowConfetti] = useState(false);
   const [confettiComplete, setConfettiComplete] = useState(false);
+  const [showRays, setShowRays] = useState(false);
   
   // Calculate size based on screen size
   const hatSize = isMobile ? 
     (window.innerWidth < 400 ? 140 : 160) : // Reduced hat size on mobile
     300; // Size on desktop
   
-  // Reset confetti when revealed state changes
+  // Reset effects when revealed state changes
   useEffect(() => {
     if (isRevealed && hasBall) {
       setShowConfetti(true);
-      // Auto-hide confetti after animation completes
+      setShowRays(true);
+      // Auto-hide effects after animation completes
       const timer = setTimeout(() => {
         setConfettiComplete(true);
       }, 2000);
       return () => clearTimeout(timer);
     } else {
       setShowConfetti(false);
+      setShowRays(false);
       setConfettiComplete(false);
     }
   }, [isRevealed, hasBall]);
@@ -124,6 +127,27 @@ const Hat: React.FC<HatProps> = ({
         </div>
       )}
       
+      {/* Light rays effect when correct hat is revealed */}
+      {showRays && hasBall && isRevealed && (
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full pointer-events-none z-40">
+          <div className="absolute inset-0 animate-rays">
+            {[...Array(12)].map((_, i) => (
+              <div 
+                key={i}
+                className="absolute top-1/2 left-1/2 w-full h-1 bg-gradient-to-r from-[#9b87f5] via-[#D946EF] to-transparent"
+                style={{ 
+                  transform: `rotate(${i * 30}deg)`, 
+                  transformOrigin: 'left center',
+                  opacity: 0.7,
+                  animationDelay: `${i * 0.1}s`,
+                  animation: 'rayGrow 2s ease-out'
+                }}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+      
       {/* Happy character with exaggerated animation */}
       {hasBall && (
         <motion.div
@@ -131,7 +155,8 @@ const Hat: React.FC<HatProps> = ({
           initial={{ scale: 0.1 }}
           animate={{ 
             scale: isRevealed ? [0.1, 1.5, 0.85, 1.1, 0.65] : 0,
-            y: isRevealed ? 5 : 0
+            y: isRevealed ? [0, 20, -30, 5, 0] : 0,
+            rotate: isRevealed ? [0, -10, 15, -5, 0] : 0
           }}
           transition={{ 
             scale: {
@@ -140,23 +165,74 @@ const Hat: React.FC<HatProps> = ({
               ease: [0.34, 1.8, 0.64, 1], // Exaggerated bounce effect with cubic-bezier
             },
             y: { 
-              duration: 0.4, 
-              delay: isRevealed ? 0.2 : 0 
+              duration: 1.5,
+              times: [0, 0.2, 0.5, 0.8, 1],
+              ease: "easeInOut"
+            },
+            rotate: {
+              duration: 1.5,
+              times: [0, 0.2, 0.5, 0.8, 1],
+              ease: "easeInOut"
             }
           }}
         >
           <div className={`flex items-center justify-center ${isMobile ? 'w-[clamp(140px,30vw,180px)]' : 'w-[clamp(160px,30vw,240px)]'}`}>
-            <img 
+            <motion.img 
               src="/lovable-uploads/109f7437-56fb-49eb-be2e-e5d8c0fe3780.png" 
               alt="Happy Character" 
               className="w-full h-auto object-contain"
-              style={{ 
-                filter: isRevealed ? 'drop-shadow(0 0 8px rgba(217, 70, 239, 0.6)) drop-shadow(0 0 12px rgba(255, 202, 40, 0.4))' : 'drop-shadow(0 0 8px rgba(217, 70, 239, 0.6))',
-                transition: 'filter 0.3s ease-in-out'
+              animate={{ 
+                filter: isRevealed ? [
+                  'brightness(1) drop-shadow(0 0 0px rgba(217, 70, 239, 0))', 
+                  'brightness(1.3) drop-shadow(0 0 15px rgba(217, 70, 239, 0.8))',
+                  'brightness(1.1) drop-shadow(0 0 8px rgba(217, 70, 239, 0.6))'
+                ] : 'brightness(1)'
+              }}
+              transition={{
+                filter: {
+                  duration: 1.8,
+                  times: [0, 0.4, 1],
+                  ease: "easeOut"
+                }
               }}
             />
           </div>
         </motion.div>
+      )}
+
+      {/* Sparkles around the Happy character */}
+      {hasBall && isRevealed && (
+        <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none z-20">
+          {[...Array(8)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute rounded-full bg-white"
+              initial={{ 
+                x: 0, 
+                y: 0, 
+                scale: 0,
+                opacity: 0 
+              }}
+              animate={{ 
+                x: Math.cos(i * Math.PI / 4) * (isMobile ? 60 : 100),
+                y: Math.sin(i * Math.PI / 4) * (isMobile ? 60 : 100),
+                scale: [0, 1, 0],
+                opacity: [0, 1, 0]
+              }}
+              transition={{ 
+                duration: 1.5,
+                delay: i * 0.1 + 0.3,
+                repeat: 1,
+                repeatDelay: 0.5
+              }}
+              style={{
+                width: `${Math.random() * 10 + 5}px`,
+                height: `${Math.random() * 10 + 5}px`,
+                boxShadow: '0 0 10px 2px rgba(255, 255, 255, 0.8)'
+              }}
+            />
+          ))}
+        </div>
       )}
     </motion.div>
   );
