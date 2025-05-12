@@ -1,7 +1,8 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useIsMobile } from '@/hooks/use-mobile';
+import Confetti from 'react-confetti';
 
 interface HatProps {
   id: number;
@@ -23,11 +24,28 @@ const Hat: React.FC<HatProps> = ({
   animationDelay = 0
 }) => {
   const isMobile = useIsMobile();
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [confettiComplete, setConfettiComplete] = useState(false);
   
   // Calculate size based on screen size
   const hatSize = isMobile ? 
     (window.innerWidth < 400 ? 140 : 160) : // Reduced hat size on mobile
     300; // Size on desktop
+  
+  // Reset confetti when revealed state changes
+  useEffect(() => {
+    if (isRevealed && hasBall) {
+      setShowConfetti(true);
+      // Auto-hide confetti after animation completes
+      const timer = setTimeout(() => {
+        setConfettiComplete(true);
+      }, 2000);
+      return () => clearTimeout(timer);
+    } else {
+      setShowConfetti(false);
+      setConfettiComplete(false);
+    }
+  }, [isRevealed, hasBall]);
   
   return (
     <motion.div
@@ -84,20 +102,42 @@ const Hat: React.FC<HatProps> = ({
         </div>
       </motion.div>
       
-      {/* Happy character (replacing the ball) */}
+      {/* Confetti when correct hat is revealed */}
+      {showConfetti && hasBall && isRevealed && !confettiComplete && (
+        <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none z-50">
+          <Confetti
+            width={window.innerWidth > 768 ? 300 : 250}
+            height={window.innerHeight > 768 ? 300 : 250}
+            recycle={false}
+            numberOfPieces={150}
+            gravity={0.25}
+            colors={['#9b87f5', '#7E69AB', '#ffffff', '#ffdf00']} // VOI brand colors + white + yellow
+            initialVelocityY={-5}
+            initialVelocityX={2}
+            confettiSource={{
+              x: window.innerWidth > 768 ? 150 : 125,
+              y: window.innerHeight > 768 ? 150 : 125,
+              w: 0,
+              h: 0
+            }}
+          />
+        </div>
+      )}
+      
+      {/* Happy character with exaggerated animation */}
       {hasBall && (
         <motion.div
-          className="absolute left-1/2 bottom-[15px] transform -translate-x-1/2"
-          initial={{ scale: 0.2 }}
+          className="absolute left-1/2 bottom-[15px] transform -translate-x-1/2 z-10"
+          initial={{ scale: 0.1 }}
           animate={{ 
-            scale: isRevealed ? [0.2, 1.2, 1] : 0,
+            scale: isRevealed ? [0.1, 1.5, 0.85, 1.1, 1.0] : 0,
             y: isRevealed ? 5 : 0
           }}
           transition={{ 
             scale: {
-              duration: 0.6,
-              times: [0, 0.5, 1],
-              ease: [0.34, 1.56, 0.64, 1], // Bounce/pop effect with cubic-bezier
+              duration: 1,
+              times: [0, 0.3, 0.6, 0.8, 1],
+              ease: [0.34, 1.8, 0.64, 1], // Exaggerated bounce effect with cubic-bezier
             },
             y: { 
               duration: 0.4, 
@@ -105,7 +145,7 @@ const Hat: React.FC<HatProps> = ({
             }
           }}
         >
-          <div className={`flex items-center justify-center ${isMobile ? 'w-[clamp(60px,20vw,80px)]' : 'w-[clamp(80px,10vw,120px)]'}`}>
+          <div className={`flex items-center justify-center ${isMobile ? 'w-[clamp(140px,30vw,180px)]' : 'w-[clamp(160px,30vw,240px)]'}`}>
             <img 
               src="/lovable-uploads/109f7437-56fb-49eb-be2e-e5d8c0fe3780.png" 
               alt="Happy Character" 

@@ -9,17 +9,17 @@ interface BallProps {
 
 const Ball: React.FC<BallProps> = ({ visible }) => {
   const isMobile = useIsMobile();
-  const size = isMobile ? 'w-[60px]' : 'w-[100px]';
+  const size = isMobile ? 'w-[clamp(140px,30vw,180px)]' : 'w-[clamp(160px,30vw,240px)]';
   
   return (
     <motion.div
       className={`${size} h-auto`}
-      initial={{ scale: 0.2 }}
-      animate={{ scale: visible ? [0.2, 1.2, 1] : 0 }}
+      initial={{ scale: 0.1 }}
+      animate={{ scale: visible ? [0.1, 1.5, 0.85, 1.1, 1.0] : 0 }}
       transition={{ 
-        duration: 0.6,
-        times: [0, 0.5, 1],
-        ease: [0.34, 1.56, 0.64, 1] // Bounce/pop effect
+        duration: 1,
+        times: [0, 0.3, 0.6, 0.8, 1],
+        ease: [0.34, 1.8, 0.64, 1] // Exaggerated bounce effect
       }}
     >
       <img 
