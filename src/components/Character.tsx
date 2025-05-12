@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -22,7 +21,8 @@ const Character: React.FC<CharacterProps> = ({ isVisible, isRevealed, isTopLayer
       animate={{ 
         scale: isRevealed ? [null, 1.1, 0.9, 1.1, 0.9, 1] : 0,
         y: isRevealed ? [null, -10, 5, -10, 5, 0] : 0,
-        rotate: isRevealed ? [null, -5, 5, -5, 5, 0] : 0
+        rotate: isRevealed ? [null, -5, 5, -5, 5, 0] : 0,
+        z: isRevealed ? 40 : 0  // Bring forward in 3D space when revealed
       }}
       transition={{ 
         scale: {
@@ -53,6 +53,10 @@ const Character: React.FC<CharacterProps> = ({ isVisible, isRevealed, isTopLayer
           src="/lovable-uploads/109f7437-56fb-49eb-be2e-e5d8c0fe3780.png" 
           alt="Happy Character" 
           className="w-full h-auto object-contain"
+          style={{ 
+            position: isRevealed ? 'relative' : 'static',
+            zIndex: isRevealed ? 70 : 'auto'
+          }}
           animate={{ 
             filter: isRevealed ? [
               'brightness(1) drop-shadow(0 0 0px rgba(217, 70, 239, 0))', 
