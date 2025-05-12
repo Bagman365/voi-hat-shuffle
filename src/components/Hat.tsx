@@ -26,8 +26,8 @@ const Hat: React.FC<HatProps> = ({
   
   // Calculate size based on screen size
   const hatSize = isMobile ? 
-    (window.innerWidth < 400 ? 160 : 200) : // Reduced hat size on mobile (~40% reduction)
-    390; // Original size on desktop
+    (window.innerWidth < 400 ? 140 : 160) : // Reduced hat size on mobile
+    300; // Size on desktop
   
   return (
     <motion.div
@@ -74,17 +74,13 @@ const Hat: React.FC<HatProps> = ({
           damping: 20 
         }}
       >
-        <div className="w-full h-full relative">
-          {/* Hat Base */}
-          <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-[80%] h-[20%] bg-[#9b87f5] dark:bg-[#33C3F0] rounded-full shadow-lg"></div>
-          
-          {/* Hat Top */}
-          <div className="absolute bottom-[19%] left-1/2 transform -translate-x-1/2 w-[70%] h-[55%] bg-[#1A1F2C] rounded-t-[180px] shadow-inner"></div>
-          
-          {/* VOI Logo on Hat */}
-          <div className="absolute bottom-[40%] left-1/2 transform -translate-x-1/2 text-white font-bold text-center text-3xl md:text-3xl text-[min(3vw,24px)]">
-            VOI
-          </div>
+        <div className="w-full h-full relative flex items-center justify-center">
+          {/* VOI Hat Image */}
+          <img 
+            src="/lovable-uploads/33d63168-809a-455d-b6ef-d99fb90765fc.png" 
+            alt="VOI Hat" 
+            className="w-full h-full object-contain"
+          />
         </div>
       </motion.div>
       
@@ -105,8 +101,8 @@ const Hat: React.FC<HatProps> = ({
             damping: 20
           }}
         >
-          <div className={`${isMobile ? 'w-[60px] h-[60px]' : 'w-[130px] h-[130px]'} bg-[#D946EF] rounded-full shadow-lg flex items-center justify-center`}>
-            <div className={`${isMobile ? 'w-[52px] h-[52px]' : 'w-[120px] h-[120px]'} bg-[#D946EF] rounded-full shadow-inner glow-effect`}></div>
+          <div className={`${isMobile ? 'w-[60px] h-[60px]' : 'w-[100px] h-[100px]'} bg-[#D946EF] rounded-full shadow-lg flex items-center justify-center`}>
+            <div className={`${isMobile ? 'w-[52px] h-[52px]' : 'w-[90px] h-[90px]'} bg-[#D946EF] rounded-full shadow-inner glow-effect`}></div>
           </div>
         </motion.div>
       )}

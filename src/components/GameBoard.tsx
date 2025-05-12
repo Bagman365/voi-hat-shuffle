@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Hat from './Hat';
@@ -30,9 +31,9 @@ const GameBoard: React.FC<GameBoardProps> = ({
   useEffect(() => {
     if (isMobile) {
       // Mobile: Use a triangular layout (2 on top, 1 on bottom)
-      const topRowY = -80; // Y position for the top row hats
-      const bottomRowY = 80; // Y position for the bottom row hat
-      const horizontalSpacing = window.innerWidth < 400 ? 80 : 100; // Adjust for very small screens
+      const topRowY = -100; // Y position for the top row hats
+      const bottomRowY = 100; // Y position for the bottom row hat
+      const horizontalSpacing = window.innerWidth < 400 ? 90 : 120; // Adjust for very small screens
       
       setHatPositions([
         { x: -horizontalSpacing, y: topRowY },  // Top left hat position
@@ -41,7 +42,7 @@ const GameBoard: React.FC<GameBoardProps> = ({
       ]);
     } else {
       // Desktop: Horizontal layout with more space
-      const spacing = 490;
+      const spacing = 350;
       setHatPositions([
         { x: -spacing, y: 0 },  // Left hat position
         { x: 0, y: 0 },         // Center hat position
@@ -179,7 +180,7 @@ const GameBoard: React.FC<GameBoardProps> = ({
               <Hat 
                 key={hatId}
                 id={hatId}
-                position={hatPositions[hatId] || { x: (hatId - 1) * 490, y: 0 }}
+                position={hatPositions[hatId] || { x: (hatId - 1) * 350, y: 0 }}
                 hasBall={hatId === ballPosition}
                 isRevealed={revealedHat === hatId}
                 onSelect={handleHatSelect}
