@@ -15,9 +15,9 @@ const Ball: React.FC<BallProps> = ({ visible }) => {
     <motion.div
       className={`${size} h-auto`}
       initial={{ scale: 0.1 }}
-      animate={{ scale: visible ? [0.1, 1.5, 0.85, 1.1, 1.0] : 0 }}
+      animate={{ scale: visible ? [0.1, 1.5, 0.85, 1.1, 0.65] : 0 }}
       transition={{ 
-        duration: 1,
+        duration: 1.2,
         times: [0, 0.3, 0.6, 0.8, 1],
         ease: [0.34, 1.8, 0.64, 1] // Exaggerated bounce effect
       }}

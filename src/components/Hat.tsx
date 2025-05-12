@@ -130,12 +130,12 @@ const Hat: React.FC<HatProps> = ({
           className="absolute left-1/2 bottom-[15px] transform -translate-x-1/2 z-10"
           initial={{ scale: 0.1 }}
           animate={{ 
-            scale: isRevealed ? [0.1, 1.5, 0.85, 1.1, 1.0] : 0,
+            scale: isRevealed ? [0.1, 1.5, 0.85, 1.1, 0.65] : 0,
             y: isRevealed ? 5 : 0
           }}
           transition={{ 
             scale: {
-              duration: 1,
+              duration: 1.2,
               times: [0, 0.3, 0.6, 0.8, 1],
               ease: [0.34, 1.8, 0.64, 1], // Exaggerated bounce effect with cubic-bezier
             },
