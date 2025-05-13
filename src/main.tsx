@@ -1,6 +1,7 @@
 
 import { createRoot } from 'react-dom/client'
-import { Provider } from "@txnlab/use-wallet";
+import { useWallet } from "@txnlab/use-wallet";
+import Provider from "@txnlab/use-wallet";
 import App from './App.tsx'
 import './index.css'
 
