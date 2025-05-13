@@ -7,9 +7,10 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import walletService, { WalletProvider } from '@/services/walletService';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
+import { useWallet } from '@txnlab/use-wallet';
+import { formatAddress } from '@/lib/walletUtils';
 
 interface WalletPanelProps {
   isConnected: boolean;
@@ -26,70 +27,63 @@ const WalletPanel: React.FC<WalletPanelProps> = ({
   onConnect,
   isMobile = false
 }) => {
+  const { activeAccount, providers, isReady, connect, disconnect } = useWallet();
   const { toast } = useToast();
-  const [walletOptions, setWalletOptions] = useState<{
-    hasVera: boolean;
-    hasKibisis: boolean;
-  }>({
-    hasVera: false,
-    hasKibisis: false
-  });
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  // Helper function to truncate address for display
-  const truncateAddress = (addr: string): string => {
-    if (addr.length <= 8) return addr;
-    return `${addr.slice(0, 5)}...${addr.slice(-4)}`;
-  };
+  // Use the connected account if available, otherwise use props
+  const connectedAddress = activeAccount?.address || address;
+  const isWalletConnected = !!activeAccount || isConnected;
 
   const handleWalletConnect = async () => {
-    const providers = await walletService.checkWalletProviders();
-    setWalletOptions(providers);
     setIsDropdownOpen(true);
   };
 
-  const connectWallet = async (provider: WalletProvider) => {
-    if (!provider) return;
-    
-    const walletInfo = await walletService.connectWallet(provider);
-    
-    if (walletInfo) {
+  const connectWallet = async (providerId: string) => {
+    try {
+      await connect(providerId);
       onConnect();
       setIsDropdownOpen(false);
       toast({
-        title: `${walletInfo.name} Connected`,
-        description: `Successfully connected to ${walletInfo.name} wallet.`,
+        title: "Wallet Connected",
+        description: "Successfully connected to wallet.",
+      });
+    } catch (error) {
+      console.error("Failed to connect wallet:", error);
+      toast({
+        title: "Connection Failed",
+        description: "Unable to connect to wallet. Please try again.",
+        variant: "destructive"
       });
     }
   };
 
   const handleDisconnect = async () => {
-    await walletService.disconnect();
-    window.location.reload(); // Simple way to reset the app state
+    try {
+      await disconnect();
+      toast({
+        title: "Wallet Disconnected",
+        description: "Your wallet has been disconnected.",
+      });
+    } catch (error) {
+      console.error("Failed to disconnect wallet:", error);
+    }
   };
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(address);
+    navigator.clipboard.writeText(connectedAddress);
     toast({
       title: "Address Copied",
       description: "Wallet address copied to clipboard",
     });
   };
 
-  // Wallet options for the dropdown
-  const walletOptions1 = [
-    { name: 'Kibisis', id: 'kibisis', logo: '🟣' },
-    { name: 'Lute', id: 'lute', logo: '🟣' },
-    { name: 'BiatecWallet', id: 'biatec', logo: '🔵' },
-    { name: 'WalletConnect', id: 'walletconnect', logo: '🔵' },
-  ];
-
   return (
     <div className={cn(
       "wallet-container",
       isMobile ? "flex justify-center mt-2" : "flex justify-end"
     )}>
-      {isConnected ? (
+      {isWalletConnected ? (
         <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
           <DropdownMenuTrigger asChild>
             <Button
@@ -103,7 +97,7 @@ const WalletPanel: React.FC<WalletPanelProps> = ({
               <WalletCards className="h-4 w-4 text-purple-400 group-hover:text-purple-300" />
               <span className="font-medium text-purple-100">{balance} VOI</span>
               <span className="text-gray-400 text-xs">|</span>
-              <span className="text-gray-400 text-xs">{truncateAddress(address)}</span>
+              <span className="text-gray-400 text-xs">{formatAddress(connectedAddress)}</span>
               <ChevronDown className="h-3 w-3 text-gray-400 transition-transform group-data-[state=open]:rotate-180" />
             </Button>
           </DropdownMenuTrigger>
@@ -116,12 +110,12 @@ const WalletPanel: React.FC<WalletPanelProps> = ({
               <div className="flex items-center justify-between border-b border-purple-500/20 pb-3">
                 <div className="flex items-center gap-2">
                   <div className="w-8 h-8 rounded-full bg-purple-900/70 flex items-center justify-center text-lg">
-                    {walletOptions1.find(w => w.id === 'kibisis')?.logo || '🟣'}
+                    🟣
                   </div>
                   <div>
                     <div className="font-medium">Connected Wallet</div>
                     <div className="text-xs text-gray-400 flex items-center gap-1">
-                      {truncateAddress(address)}
+                      {formatAddress(connectedAddress)}
                       <button 
                         onClick={(e) => {
                           e.stopPropagation();
@@ -172,7 +166,7 @@ const WalletPanel: React.FC<WalletPanelProps> = ({
               onClick={handleWalletConnect}
               variant="outline" 
               className={cn(
-                "wallet-pill border-purple-500 text-white hover:bg-purple-700/30",
+                "wallet-pill border-purple-500 text-white hover:bg-purple-900/30 hover:border-purple-400",
                 "py-2 px-4 h-auto rounded-full transition-all shadow-sm hover:shadow-purple-500/20",
                 "flex items-center gap-2"
               )}
@@ -195,16 +189,21 @@ const WalletPanel: React.FC<WalletPanelProps> = ({
               </div>
               
               <div className="space-y-3">
-                {walletOptions1.map((wallet) => (
-                  <div key={wallet.id} className="flex items-center justify-between p-2 rounded-lg hover:bg-purple-900/20 transition-colors">
+                {providers?.map((provider) => (
+                  <div key={provider.metadata.id} className="flex items-center justify-between p-2 rounded-lg hover:bg-purple-900/20 transition-colors">
                     <div className="flex items-center gap-3">
                       <div className="flex items-center justify-center w-10 h-10 rounded-full bg-purple-900/30 text-lg">
-                        {wallet.logo}
+                        <img 
+                          src={provider.metadata.icon} 
+                          alt={provider.metadata.name} 
+                          className="w-6 h-6"
+                          onError={(e) => (e.currentTarget.src = '🟣')}
+                        />
                       </div>
-                      <span className="font-medium">{wallet.name}</span>
+                      <span className="font-medium">{provider.metadata.name}</span>
                     </div>
                     <Button
-                      onClick={() => connectWallet(wallet.id as WalletProvider)}
+                      onClick={() => connectWallet(provider.metadata.id)}
                       variant="outline"
                       size="sm"
                       className="border-purple-500 bg-transparent hover:bg-purple-700/30 rounded-full w-24"
