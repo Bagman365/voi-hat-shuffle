@@ -41,10 +41,11 @@ export class SlotMachineClient {
 
       // 1. Construct transaction parameters
       const params = await this.algod.getTransactionParams().do();
+      const senderAddress = this.wallet.address;
       
       // 2. Create application call transaction
       const betTx = algosdk.makeApplicationCallTxnFromObject({
-        from: this.wallet.address,
+        sender: senderAddress,
         appIndex: this.appId,
         onComplete: algosdk.OnApplicationComplete.NoOpOC,
         appArgs: [
@@ -57,7 +58,7 @@ export class SlotMachineClient {
 
       // 3. Create payment transaction for the bet amount
       const paymentTx = algosdk.makePaymentTxnWithSuggestedParamsFromObject({
-        from: this.wallet.address,
+        sender: senderAddress,
         to: algosdk.getApplicationAddress(this.appId),
         amount: betAmount + 1000, // Add 1000 microVOI for box storage
         suggestedParams: params,
@@ -87,13 +88,13 @@ export class SlotMachineClient {
       const response = await this.algod.sendRawTransaction(signedTxns).do();
       
       // 7. Wait for confirmation
-      await algosdk.waitForConfirmation(this.algod, response.txId, 10);
+      await algosdk.waitForConfirmation(this.algod, response.txid, 10);
       
       // 8. Return bet key
       return { 
-        txId: response.txId, 
+        txId: response.txid, 
         success: true,
-        return: `bet_${response.txId}` 
+        return: `bet_${response.txid}` 
       };
     } catch (error) {
       console.error("Error in spin:", error);
@@ -105,7 +106,7 @@ export class SlotMachineClient {
     }
   }
 
-  // Method to check bet results using MimirAPI
+  // Method to check bet result using MimirAPI
   async checkBetResult(txId: string): Promise<{
     success: boolean;
     payout: number;
@@ -149,10 +150,11 @@ export class SlotMachineClient {
 
       // 1. Construct transaction parameters
       const params = await this.algod.getTransactionParams().do();
+      const senderAddress = this.wallet.address;
       
       // 2. Create application call transaction for claiming
       const claimTx = algosdk.makeApplicationCallTxnFromObject({
-        from: this.wallet.address,
+        sender: senderAddress,
         appIndex: this.appId,
         onComplete: algosdk.OnApplicationComplete.NoOpOC,
         appArgs: [
@@ -182,11 +184,11 @@ export class SlotMachineClient {
       const response = await this.algod.sendRawTransaction(signedTxn).do();
       
       // 5. Wait for confirmation
-      await algosdk.waitForConfirmation(this.algod, response.txId, 10);
+      await algosdk.waitForConfirmation(this.algod, response.txid, 10);
       
       return {
         success: true,
-        claimTxId: response.txId
+        claimTxId: response.txid
       };
     } catch (error) {
       console.error("Error in claim:", error);
