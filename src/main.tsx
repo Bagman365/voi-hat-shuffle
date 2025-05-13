@@ -2,7 +2,7 @@
 import { createRoot } from 'react-dom/client'
 import { DeflyWalletConnect } from '@blockshake/defly-connect'
 import { PeraWalletConnect } from '@perawallet/connect'
-import { useWallet } from '@txnlab/use-wallet'
+import { WalletProvider } from '@txnlab/use-wallet'
 import App from './App.tsx'
 import './index.css'
 
@@ -22,26 +22,16 @@ const wallets = [
   }
 ]
 
-// Create custom provider wrapper component
-const WalletProviderWrapper = ({ children }: { children: React.ReactNode }) => {
-  const { Provider } = useWallet();
-  
-  return (
-    <Provider
-      wallets={wallets}
-      nodeConfig={{
-        network: "mainnet",
-        nodeServer: "https://mainnet-api.voi.nodly.io",
-        indexerServer: "https://mainnet-idx.voi.nodly.io"
-      }}
-    >
-      {children}
-    </Provider>
-  );
-};
-
+// Create root and render app with wallet provider
 createRoot(document.getElementById("root")!).render(
-  <WalletProviderWrapper>
+  <WalletProvider
+    wallets={wallets}
+    nodeConfig={{
+      network: "mainnet",
+      nodeServer: "https://mainnet-api.voi.nodly.io",
+      indexerServer: "https://mainnet-idx.voi.nodly.io"
+    }}
+  >
     <App />
-  </WalletProviderWrapper>
+  </WalletProvider>
 );
