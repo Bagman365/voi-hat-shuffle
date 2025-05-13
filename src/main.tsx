@@ -1,11 +1,11 @@
 
 import { createRoot } from 'react-dom/client'
-import { Provider } from "@txnlab/use-wallet";
+import { WalletConnectProvider } from "@txnlab/use-wallet";
 import App from './App.tsx'
 import './index.css'
 
 createRoot(document.getElementById("root")!).render(
-  <Provider
+  <WalletConnectProvider
     wallets={["kibisis", "lute", "walletconnect", "pera"]}
     nodeConfig={{
       network: "mainnet",
@@ -14,5 +14,5 @@ createRoot(document.getElementById("root")!).render(
     }}
   >
     <App />
-  </Provider>
+  </WalletConnectProvider>
 );
