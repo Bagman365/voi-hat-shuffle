@@ -1,7 +1,7 @@
 
 import React from 'react';
 import WalletOption from './WalletOption';
-import { WalletProvider } from '@/services/walletService';
+import { WalletProvider } from '@/types/wallet';
 
 interface WalletOptionsViewProps {
   availableWallets: Array<{

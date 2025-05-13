@@ -2,7 +2,6 @@
 import { createRoot } from 'react-dom/client'
 import { DeflyWalletConnect } from '@blockshake/defly-connect'
 import { PeraWalletConnect } from '@perawallet/connect'
-import { WalletProvider } from '@txnlab/use-wallet'
 import App from './App.tsx'
 import './index.css'
 
@@ -22,9 +21,12 @@ const wallets = [
   }
 ]
 
+// Create root and render app with provider from txnlab
+const WalletProviderFromTxnlab = require('@txnlab/use-wallet').WalletProvider;
+
 // Create root and render app with wallet provider
 createRoot(document.getElementById("root")!).render(
-  <WalletProvider
+  <WalletProviderFromTxnlab
     wallets={wallets}
     nodeConfig={{
       network: "mainnet",
@@ -33,5 +35,5 @@ createRoot(document.getElementById("root")!).render(
     }}
   >
     <App />
-  </WalletProvider>
+  </WalletProviderFromTxnlab>
 );

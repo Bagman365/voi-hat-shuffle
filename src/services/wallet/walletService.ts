@@ -51,4 +51,4 @@ class WalletService extends WalletDetectionService {
 // Create singleton instance
 export const walletService = new WalletService();
 export default walletService;
-export { WalletProvider } from "@/types/wallet";
+export type { WalletProvider } from "@/types/wallet";
