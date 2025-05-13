@@ -1,6 +1,5 @@
 
 import walletService from './walletService';
-import { useWalletContext } from '@txnlab/use-wallet';
 import { getAlgodClient, getIndexerClient } from '@/utils/algodClient';
 import { SlotMachineClient } from '@/utils/SlotMachineClient';
 
