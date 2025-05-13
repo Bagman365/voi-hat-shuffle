@@ -22,11 +22,15 @@ export class SlotMachineClient {
     this.paymentAmount = amount;
   }
 
-  async spin(betAmount: number, gameIndex?: number) {
+  async spin(betAmount: number, gameId?: number) {
     // Simulate call to VOI contract (replace this with real ABI logic or SDK method)
-    console.log(`Spinning with bet: ${betAmount}, index: ${gameIndex || 0}`);
+    console.log(`Spinning with bet: ${betAmount}, index: ${gameId || 0}`);
 
     // Normally you'd create transactions, sign, and send them here
+    // Based on the referenced GitHub code
+    
+    // This is a placeholder that simulates the contract call
+    // In a real implementation, we would use the ABI calls shown in the referenced repository
     return { return: `bet_${Date.now()}_${Math.floor(Math.random() * 10000)}` };
   }
 }
