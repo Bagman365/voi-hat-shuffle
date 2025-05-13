@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import walletService from '@/services/walletService';
+import walletService from '@/services/wallet/walletService';
 import { useToast } from '@/hooks/use-toast';
 
 export const useWalletInteraction = () => {

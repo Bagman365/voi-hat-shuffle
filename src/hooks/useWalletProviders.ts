@@ -1,6 +1,5 @@
-
 import { useState, useEffect } from 'react';
-import walletService from '@/services/walletService';
+import walletService from '@/services/wallet/walletService';
 
 export const useWalletProviders = () => {
   const [walletOptions, setWalletOptions] = useState<{

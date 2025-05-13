@@ -1,5 +1,5 @@
 
-import walletService from './walletService';
+import walletService from './wallet/walletService';
 import { getAlgodClient, getIndexerClient } from '@/utils/algodClient';
 import { SlotMachineClient } from '@/utils/SlotMachineClient';
 

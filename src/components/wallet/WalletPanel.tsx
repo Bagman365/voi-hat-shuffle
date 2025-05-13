@@ -7,7 +7,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import walletService, { WalletProvider } from '@/services/walletService';
+import walletService, { WalletProvider } from '@/services/wallet/walletService';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import ConnectedWalletView from './ConnectedWalletView';

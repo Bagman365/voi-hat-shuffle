@@ -1,8 +1,7 @@
-
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
-import { WalletProvider } from '@/services/walletService';
+import { WalletProvider } from '@/types/wallet';
 
 interface WalletOptionProps {
   id: string;
