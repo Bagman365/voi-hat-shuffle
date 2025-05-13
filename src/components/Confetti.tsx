@@ -12,13 +12,10 @@ const Confetti: React.FC<ConfettiProps> = ({ active, position }) => {
 
   useEffect(() => {
     if (active) {
-      // Reset state when activated
-      setComplete(false);
-      
       // Auto-hide effects after animation completes
       const timer = setTimeout(() => {
         setComplete(true);
-      }, 3500); // Slightly longer than fireworks duration
+      }, 5000);
       return () => clearTimeout(timer);
     } else {
       setComplete(false);
@@ -33,7 +30,7 @@ const Confetti: React.FC<ConfettiProps> = ({ active, position }) => {
         width={window.innerWidth}
         height={window.innerHeight}
         recycle={false}
-        numberOfPieces={300}
+        numberOfPieces={250}
         gravity={0.15}
         colors={['#9b87f5', '#7E69AB', '#ffffff', '#ffdf00', '#ff9900', '#8f44fd']} 
         initialVelocityY={-8}

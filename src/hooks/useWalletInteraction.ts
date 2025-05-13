@@ -1,12 +1,12 @@
 
 import { useState, useEffect } from 'react';
-import walletService from '@/services/wallet/walletService';
+import walletService from '@/services/walletService';
 import { useToast } from '@/hooks/use-toast';
 
 export const useWalletInteraction = () => {
   const [walletConnected, setWalletConnected] = useState<boolean>(false);
-  const [balance, setBalance] = useState<number>(0);
-  const [walletAddress, setWalletAddress] = useState<string>('');
+  const [balance, setBalance] = useState<number>(100);
+  const [walletAddress, setWalletAddress] = useState<string>('0x1234...abcd');
   const { toast } = useToast();
 
   // Check wallet connection status on load
@@ -30,7 +30,7 @@ export const useWalletInteraction = () => {
           setBalance(newBalance);
         }
       }
-    }, 15000); // Check every 15 seconds
+    }, 30000); // Check every 30 seconds
     
     return () => clearInterval(balanceInterval);
   }, [walletConnected]);
@@ -48,13 +48,10 @@ export const useWalletInteraction = () => {
   };
 
   const updateBalanceForWager = (amount: number) => {
-    // In production, this should be handled by the refresh balance polling
-    // But for smoother UX, we update it immediately
     setBalance(prev => prev - amount);
   };
 
   const updateBalanceForWin = (amount: number) => {
-    // Similarly, we update the UI immediately for better UX
     setBalance(prev => prev + amount);
   };
 
