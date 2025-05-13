@@ -1,4 +1,3 @@
-
 import { toast } from "@/hooks/use-toast";
 import { getAlgodClient } from '@/utils/algodClient';
 
@@ -89,10 +88,15 @@ class WalletService {
         // @ts-ignore - kibisis is injected by the extension
         const balance = await window.kibisis.getBalance(accounts[0]);
         
+        // Fix for bigint division
+        const balanceNumber = typeof balance === 'bigint' 
+          ? Number(balance) / 1000000 
+          : balance / 1000000;
+        
         this.currentWallet = {
           name: 'Kibisis',
           address: accounts[0],
-          balance: balance / 1000000 // Convert from microVOI to VOI
+          balance: balanceNumber
         };
         
         this.currentProvider = 'kibisis';
@@ -121,7 +125,11 @@ class WalletService {
       if (accounts && accounts.length > 0) {
         const algod = getAlgodClient();
         const accountInfo = await algod.accountInformation(accounts[0]).do();
-        const balance = accountInfo.amount / 1000000; // Convert from microVOI to VOI
+        
+        // Fix for bigint division
+        const balance = typeof accountInfo.amount === 'bigint'
+          ? Number(accountInfo.amount) / 1000000
+          : accountInfo.amount / 1000000;
         
         this.currentWallet = {
           name: 'Lute',
@@ -184,7 +192,11 @@ class WalletService {
       if (accounts && accounts.length > 0) {
         const algod = getAlgodClient();
         const accountInfo = await algod.accountInformation(accounts[0]).do();
-        const balance = accountInfo.amount / 1000000; // Convert from microVOI to VOI
+        
+        // Fix for bigint division
+        const balance = typeof accountInfo.amount === 'bigint'
+          ? Number(accountInfo.amount) / 1000000
+          : accountInfo.amount / 1000000;
         
         this.currentWallet = {
           name: 'Pera',
@@ -218,7 +230,11 @@ class WalletService {
       if (accounts && accounts.length > 0) {
         const algod = getAlgodClient();
         const accountInfo = await algod.accountInformation(accounts[0]).do();
-        const balance = accountInfo.amount / 1000000; // Convert from microVOI to VOI
+        
+        // Fix for bigint division
+        const balance = typeof accountInfo.amount === 'bigint'
+          ? Number(accountInfo.amount) / 1000000
+          : accountInfo.amount / 1000000;
         
         this.currentWallet = {
           name: 'Defly',
@@ -296,7 +312,12 @@ class WalletService {
         try {
           // @ts-ignore - kibisis is injected by the extension
           const balance = await window.kibisis.getBalance(this.currentWallet.address);
-          this.currentWallet.balance = balance / 1000000; // Convert from microVOI to VOI
+          
+          // Fix for bigint division
+          this.currentWallet.balance = typeof balance === 'bigint'
+            ? Number(balance) / 1000000
+            : balance / 1000000;
+            
           return this.currentWallet.balance;
         } catch (error) {
           console.error("Error refreshing Kibisis balance:", error);
@@ -306,7 +327,12 @@ class WalletService {
       // Fallback to algod for other wallets
       try {
         const accountInfo = await algod.accountInformation(this.currentWallet.address).do();
-        this.currentWallet.balance = accountInfo.amount / 1000000;
+        
+        // Fix for bigint division
+        this.currentWallet.balance = typeof accountInfo.amount === 'bigint'
+          ? Number(accountInfo.amount) / 1000000
+          : accountInfo.amount / 1000000;
+          
         return this.currentWallet.balance;
       } catch (error) {
         console.error("Error refreshing balance via algod:", error);

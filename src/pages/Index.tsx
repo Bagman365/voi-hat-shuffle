@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import GameBoard from '@/components/GameBoard';
 import ControlsPanel from '@/components/ControlsPanel';
 import StatusPanel from '@/components/StatusPanel';
-import WalletPanel from '@/components/WalletPanel';
+import WalletPanel from '@/components/wallet/WalletPanel';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useGameStatus } from '@/hooks/useGameStatus';
 import { useWalletInteraction } from '@/hooks/useWalletInteraction';
