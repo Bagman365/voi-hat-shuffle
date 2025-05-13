@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Wallet, LogOut, Plus, Copy, ChevronDown, WalletCards } from 'lucide-react';
 import {
@@ -30,15 +29,31 @@ const WalletPanel: React.FC<WalletPanelProps> = ({
   const [walletOptions, setWalletOptions] = useState<{
     hasVera: boolean;
     hasKibisis: boolean;
+    hasLute: boolean;
+    hasDefly: boolean;
+    hasPera: boolean;
   }>({
     hasVera: false,
-    hasKibisis: false
+    hasKibisis: false,
+    hasLute: false,
+    hasDefly: false,
+    hasPera: false
   });
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
+  // Check available wallets on component mount
+  useEffect(() => {
+    const checkAvailableWallets = async () => {
+      const providers = await walletService.checkWalletProviders();
+      setWalletOptions(providers);
+    };
+    
+    checkAvailableWallets();
+  }, []);
+
   // Helper function to truncate address for display
   const truncateAddress = (addr: string): string => {
-    if (addr.length <= 8) return addr;
+    if (!addr || addr.length <= 8) return addr;
     return `${addr.slice(0, 5)}...${addr.slice(-4)}`;
   };
 
@@ -77,12 +92,67 @@ const WalletPanel: React.FC<WalletPanelProps> = ({
   };
 
   // Wallet options for the dropdown
-  const walletOptions1 = [
-    { name: 'Kibisis', id: 'kibisis', logo: '🟣' },
-    { name: 'Lute', id: 'lute', logo: '🟣' },
-    { name: 'BiatecWallet', id: 'biatec', logo: '🔵' },
-    { name: 'WalletConnect', id: 'walletconnect', logo: '🔵' },
-  ];
+  const getAvailableWalletOptions = () => {
+    const options = [
+      { 
+        name: 'Kibisis', 
+        id: 'kibisis', 
+        logo: '🟣', 
+        available: walletOptions.hasKibisis,
+        recommended: true
+      },
+      { 
+        name: 'Lute', 
+        id: 'lute', 
+        logo: '🟣', 
+        available: walletOptions.hasLute 
+      },
+      { 
+        name: 'Pera', 
+        id: 'pera', 
+        logo: '🔵', 
+        available: walletOptions.hasPera 
+      },
+      { 
+        name: 'Defly', 
+        id: 'defly', 
+        logo: '🔵', 
+        available: walletOptions.hasDefly 
+      },
+      { 
+        name: 'BiatecWallet', 
+        id: 'biatec', 
+        logo: '🔵', 
+        available: false 
+      },
+      { 
+        name: 'WalletConnect', 
+        id: 'walletconnect', 
+        logo: '🔵', 
+        available: false 
+      },
+    ];
+
+    // If on mobile, add Vera wallet
+    if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+      options.unshift({ 
+        name: 'Vera', 
+        id: 'vera', 
+        logo: '🟣', 
+        available: walletOptions.hasVera,
+        recommended: true
+      });
+    }
+
+    // Show available wallets first, then others
+    return options.sort((a, b) => {
+      if (a.recommended && !b.recommended) return -1;
+      if (!a.recommended && b.recommended) return 1;
+      if (a.available && !b.available) return -1;
+      if (!a.available && b.available) return 1;
+      return 0;
+    });
+  };
 
   return (
     <div className={cn(
@@ -116,7 +186,7 @@ const WalletPanel: React.FC<WalletPanelProps> = ({
               <div className="flex items-center justify-between border-b border-purple-500/20 pb-3">
                 <div className="flex items-center gap-2">
                   <div className="w-8 h-8 rounded-full bg-purple-900/70 flex items-center justify-center text-lg">
-                    {walletOptions1.find(w => w.id === 'kibisis')?.logo || '🟣'}
+                    {getAvailableWalletOptions().find(w => w.id === walletService.getCurrentProvider())?.logo || '🟣'}
                   </div>
                   <div>
                     <div className="font-medium">Connected Wallet</div>
@@ -195,18 +265,31 @@ const WalletPanel: React.FC<WalletPanelProps> = ({
               </div>
               
               <div className="space-y-3">
-                {walletOptions1.map((wallet) => (
+                {getAvailableWalletOptions().map((wallet) => (
                   <div key={wallet.id} className="flex items-center justify-between p-2 rounded-lg hover:bg-purple-900/20 transition-colors">
                     <div className="flex items-center gap-3">
                       <div className="flex items-center justify-center w-10 h-10 rounded-full bg-purple-900/30 text-lg">
                         {wallet.logo}
                       </div>
-                      <span className="font-medium">{wallet.name}</span>
+                      <div>
+                        <span className="font-medium">{wallet.name}</span>
+                        {wallet.recommended && (
+                          <span className="ml-2 bg-purple-500/20 text-purple-300 text-xs px-2 py-0.5 rounded-full">
+                            Recommended
+                          </span>
+                        )}
+                        {!wallet.available && (
+                          <div className="text-xs text-gray-400">
+                            Not installed
+                          </div>
+                        )}
+                      </div>
                     </div>
                     <Button
                       onClick={() => connectWallet(wallet.id as WalletProvider)}
                       variant="outline"
                       size="sm"
+                      disabled={!wallet.available}
                       className="border-purple-500 bg-transparent hover:bg-purple-700/30 rounded-full w-24"
                     >
                       Connect

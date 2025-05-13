@@ -7,14 +7,20 @@ export const useSlotMachine = () => {
   const [isSpinning, setIsSpinning] = useState<boolean>(false);
   const [lastBetKey, setLastBetKey] = useState<string | null>(null);
   const [payout, setPayout] = useState<number | null>(null);
+  const [isClaimable, setIsClaimable] = useState<boolean>(false);
+  const [isClaiming, setIsClaiming] = useState<boolean>(false);
   const { toast } = useToast();
   
   const spin = async (betAmount: number): Promise<boolean> => {
     setIsSpinning(true);
     setPayout(null);
+    setIsClaimable(false);
     
     try {
-      const result = await slotMachineService.spin(betAmount);
+      // Convert to microVOI if necessary
+      const microVOIAmount = betAmount;
+      
+      const result = await slotMachineService.spin(microVOIAmount);
       
       if (!result.success) {
         toast({
@@ -27,12 +33,23 @@ export const useSlotMachine = () => {
       
       setLastBetKey(result.betKey);
       
+      // Wait for blockchain confirmation
+      toast({
+        title: "Transaction Submitted",
+        description: "Waiting for blockchain confirmation...",
+      });
+      
       // Simulate waiting for blockchain confirmation
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      await new Promise(resolve => setTimeout(resolve, 2000));
       
       // Check result
       const spinPayout = await slotMachineService.fetchPayout(result.betKey);
       setPayout(spinPayout);
+      
+      // If there's a payout, it's claimable
+      if (spinPayout > 0) {
+        setIsClaimable(true);
+      }
       
       return spinPayout > 0;
     } catch (error) {
@@ -48,14 +65,16 @@ export const useSlotMachine = () => {
     }
   };
   
-  const claim = async (): Promise<void> => {
-    if (!lastBetKey || payout === null || payout <= 0) {
+  const claim = async (): Promise<boolean> => {
+    if (!lastBetKey || payout === null || payout <= 0 || !isClaimable) {
       toast({
         title: "Nothing to Claim",
         description: "No winning bet available to claim",
       });
-      return;
+      return false;
     }
+    
+    setIsClaiming(true);
     
     try {
       const result = await slotMachineService.claim(lastBetKey);
@@ -69,12 +88,15 @@ export const useSlotMachine = () => {
         // Reset after successful claim
         setLastBetKey(null);
         setPayout(null);
+        setIsClaimable(false);
+        return true;
       } else {
         toast({
           title: "Claim Failed",
           description: "Unable to claim winnings",
           variant: "destructive"
         });
+        return false;
       }
     } catch (error) {
       console.error("Error claiming winnings:", error);
@@ -83,6 +105,9 @@ export const useSlotMachine = () => {
         description: "Something went wrong while claiming",
         variant: "destructive"
       });
+      return false;
+    } finally {
+      setIsClaiming(false);
     }
   };
   
@@ -90,6 +115,8 @@ export const useSlotMachine = () => {
     isSpinning,
     lastBetKey,
     payout,
+    isClaimable,
+    isClaiming,
     spin,
     claim
   };

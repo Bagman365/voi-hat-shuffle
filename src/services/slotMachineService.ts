@@ -10,9 +10,23 @@ interface SpinResult {
   message?: string;
 }
 
-// This is a stub implementation that will be replaced with real blockchain integration
 class SlotMachineService {
   private readonly slotAppId: number = 40048754; // VOI SlotMachine mainnet contract
+  private slotMachineClient: SlotMachineClient | null = null;
+  private lastBetResults: Map<string, number> = new Map();
+  
+  /**
+   * Get or initialize the SlotMachine client
+   */
+  private getClient(): SlotMachineClient {
+    if (!this.slotMachineClient) {
+      const algod = getAlgodClient();
+      const indexer = getIndexerClient();
+      const wallet = walletService.getCurrentWallet();
+      this.slotMachineClient = new SlotMachineClient(this.slotAppId, algod, indexer, wallet);
+    }
+    return this.slotMachineClient;
+  }
   
   /**
    * Initiates a spin on the slot machine smart contract
@@ -23,7 +37,8 @@ class SlotMachineService {
   public async spin(betAmount: number, gameId?: number): Promise<SpinResult> {
     try {
       // Check if wallet is connected
-      if (!walletService.getCurrentWallet()) {
+      const wallet = walletService.getCurrentWallet();
+      if (!wallet) {
         return { 
           betKey: '', 
           success: false,
@@ -31,35 +46,38 @@ class SlotMachineService {
         };
       }
       
-      // Log spin attempt
-      console.log(`Attempting bet of ${betAmount} microVOI on app ${this.slotAppId}`);
+      // Convert VOI to microVOI if not already in microVOI format
+      const microBetAmount = betAmount * 1000000;
       
-      // For now, generate a mock bet key since we don't have full integration yet
-      // In a production implementation, we would use real contract calls
+      // Log spin attempt
+      console.log(`Attempting bet of ${microBetAmount} microVOI on app ${this.slotAppId}`);
+      
       try {
-        // Setup for real contract interaction - this part is not fully implemented yet
-        // but demonstrates how it would be connected
-        const algod = getAlgodClient();
-        const indexer = getIndexerClient();
-        const wallet = walletService.getCurrentWallet();
+        // Get client and set payment amount
+        const client = this.getClient();
+        await client.setPaymentAmount(microBetAmount + 1000); // Add box fee
         
-        // Example with SlotMachineClient
-        const client = new SlotMachineClient(this.slotAppId, algod, indexer, wallet);
-        await client.setPaymentAmount(betAmount + 1000); // box fee
-        const result = await client.spin(betAmount, gameId);
+        // Attempt spin
+        const result = await client.spin(microBetAmount, gameId);
+        
+        if (!result.success) {
+          return {
+            betKey: '',
+            success: false,
+            message: result.error || 'Transaction failed'
+          };
+        }
         
         return { 
-          betKey: result.return, 
+          betKey: result.return || `bet_${result.txId}`,
           success: true 
         };
       } catch (error) {
         console.error("Error in contract interaction:", error);
-        
-        // Fallback to mock for now
-        const mockBetKey = `bet_${Date.now()}_${Math.floor(Math.random() * 10000)}`;
         return {
-          betKey: mockBetKey,
-          success: true
+          betKey: '',
+          success: false,
+          message: error instanceof Error ? error.message : 'Contract interaction failed'
         };
       }
     } catch (error) {
@@ -78,20 +96,38 @@ class SlotMachineService {
    * @returns The payout amount in microVOI, or 0 if lost
    */
   public async fetchPayout(betKey: string): Promise<number> {
-    // Placeholder for actual payout fetching logic
-    // In production, you would look up the result from the blockchain
-    
-    // For demo purposes, create a random result
-    const didWin = Math.random() > 0.5;
-    
-    console.log(`Fetching payout for bet key: ${betKey}`);
-    
-    if (didWin) {
-      const payout = Math.floor(Math.random() * 5000000) + 1000000; // 1-6 VOI
-      return payout;
+    // Check if we already have this result cached
+    if (this.lastBetResults.has(betKey)) {
+      return this.lastBetResults.get(betKey) || 0;
     }
     
-    return 0; // No payout
+    try {
+      const txId = betKey.replace('bet_', '');
+      const client = this.getClient();
+      const result = await client.checkBetResult(txId);
+      
+      if (result.success) {
+        // Cache the result
+        this.lastBetResults.set(betKey, result.payout);
+        return result.payout;
+      }
+      
+      return 0; // No payout
+    } catch (error) {
+      console.error("Error fetching payout:", error);
+      
+      // For development fallback, create a random result
+      if (process.env.NODE_ENV !== 'production') {
+        const didWin = Math.random() > 0.5;
+        if (didWin) {
+          const payout = Math.floor(Math.random() * 5000000) + 1000000; // 1-6 VOI
+          this.lastBetResults.set(betKey, payout);
+          return payout;
+        }
+      }
+      
+      return 0;
+    }
   }
   
   /**
@@ -100,15 +136,25 @@ class SlotMachineService {
    * @returns Success status and amount claimed
    */
   public async claim(betKey: string): Promise<{success: boolean, amount: number}> {
-    // Placeholder for actual claiming logic
-    // In production, you would call the claim method on the smart contract
-    
     try {
       const payout = await this.fetchPayout(betKey);
       
-      if (payout > 0) {
-        console.log(`Simulating claim of ${payout} microVOI for bet key: ${betKey}`);
-        // In production, call the actual smart contract
+      if (payout <= 0) {
+        return {
+          success: false,
+          amount: 0
+        };
+      }
+      
+      // Attempt to claim the winnings
+      const txId = betKey.replace('bet_', '');
+      const client = this.getClient();
+      const result = await client.claimWinnings(txId);
+      
+      if (result.success) {
+        // Remove from cache after successful claim
+        this.lastBetResults.delete(betKey);
+        
         return {
           success: true,
           amount: payout
@@ -126,6 +172,11 @@ class SlotMachineService {
         amount: 0
       };
     }
+  }
+
+  // Reset the client when wallet changes
+  public resetClient() {
+    this.slotMachineClient = null;
   }
 }
 
