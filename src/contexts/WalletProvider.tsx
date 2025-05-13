@@ -42,7 +42,11 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
   return (
     <UseWalletProvider
       providers={providers}
-      nodeConfig={{ network: 'voitest-v1', nodeServer: 'https://testnet-api.voi.nodly.io' }}
+      nodeConfig={{ 
+        network: 'voitest-v1', 
+        nodeServer: 'https://testnet-api.voi.nodly.io',
+        indexerServer: 'https://testnet-idx.voi.nodly.io'
+      }}
     >
       {children}
     </UseWalletProvider>

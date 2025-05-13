@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useWallet } from '@txnlab/use-wallet';
 import { useToast } from '@/hooks/use-toast';
-import { formatAddress, formatAssetBalance } from '@/lib/walletUtils';
+import { formatAddress } from '@/lib/walletUtils';
 
 export const useWalletInteraction = () => {
   const { activeAccount, providers, isReady } = useWallet();
@@ -46,22 +46,4 @@ export const useWalletInteraction = () => {
     updateBalanceForWager,
     updateBalanceForWin
   };
-};
-
-// Helper functions for formatting
-<lov-write file_path="src/lib/walletUtils.ts">
-/**
- * Format a wallet address for display by truncating the middle
- */
-export const formatAddress = (address: string): string => {
-  if (!address) return '';
-  if (address.length <= 8) return address;
-  return `${address.slice(0, 5)}...${address.slice(-4)}`;
-};
-
-/**
- * Format an asset balance with proper decimal places
- */
-export const formatAssetBalance = (balance: number, decimals: number = 6): string => {
-  return (balance / Math.pow(10, decimals)).toFixed(decimals);
 };
