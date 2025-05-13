@@ -1,13 +1,30 @@
 
 import { createRoot } from 'react-dom/client'
-import { useWallet } from "@txnlab/use-wallet";
-import Provider from "@txnlab/use-wallet";
+import { DeflyWalletConnect } from '@blockshake/defly-connect'
+import { PeraWalletConnect } from '@perawallet/connect'
+import { WalletProvider } from '@txnlab/use-wallet'
 import App from './App.tsx'
 import './index.css'
 
+// Define the wallets we want to support
+const wallets = [
+  {
+    id: 'defly-wallet',
+    name: 'Defly Wallet',
+    app: DeflyWalletConnect,
+    connectorOptions: {}
+  },
+  {
+    id: 'pera-wallet',
+    name: 'Pera Wallet',
+    app: PeraWalletConnect,
+    connectorOptions: {}
+  }
+]
+
 createRoot(document.getElementById("root")!).render(
-  <Provider
-    wallets={["kibisis", "lute", "walletconnect", "pera"]}
+  <WalletProvider
+    wallets={wallets}
     nodeConfig={{
       network: "mainnet",
       nodeServer: "https://mainnet-api.voi.nodly.io",
@@ -15,5 +32,5 @@ createRoot(document.getElementById("root")!).render(
     }}
   >
     <App />
-  </Provider>
+  </WalletProvider>
 );
