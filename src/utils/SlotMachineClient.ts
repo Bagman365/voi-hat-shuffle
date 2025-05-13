@@ -59,7 +59,7 @@ export class SlotMachineClient {
       // 3. Create payment transaction for the bet amount
       const paymentTx = algosdk.makePaymentTxnWithSuggestedParamsFromObject({
         sender: senderAddress,
-        to: algosdk.getApplicationAddress(this.appId),
+        receiver: algosdk.getApplicationAddress(this.appId),
         amount: betAmount + 1000, // Add 1000 microVOI for box storage
         suggestedParams: params,
       });
