@@ -74,7 +74,7 @@ const WalletSelector: React.FC<WalletSelectorProps> = ({
                   <div className="flex items-center justify-center w-10 h-10 rounded-full bg-purple-900/30 text-lg">
                     {walletEmojis[wallet.id] || '👛'}
                   </div>
-                  <span className="font-medium">{wallet.name}</span>
+                  <span className="font-medium">{wallet.id}</span>
                 </div>
                 <Button
                   onClick={() => connectWallet(wallet.id)}

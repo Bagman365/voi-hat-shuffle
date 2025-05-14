@@ -22,7 +22,7 @@ const WalletPanel: React.FC<WalletPanelProps> = ({
   isMobile = false
 }) => {
   const { toast } = useToast();
-  const { wallets, disconnect: disconnectWallet } = useWallet();
+  const { wallets, disconnect } = useWallet();
   
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -49,7 +49,7 @@ const WalletPanel: React.FC<WalletPanelProps> = ({
   };
 
   const handleDisconnect = async () => {
-    await disconnectWallet();
+    await disconnect();
     window.location.reload(); // Simple way to reset the app state
   };
 

@@ -10,29 +10,28 @@ export const useWalletInteraction = () => {
   const { 
     activeAccount,
     activeAddress,
-    connectedAccounts,
-    providers,
-    clientStates,
-    reconnectProviders,
-    disconnect: disconnectWallet
+    isActive,
+    getAlgodClient,
+    wallets,
+    disconnect
   } = useWallet();
 
-  // Check if any wallet is connected
-  const isConnected = connectedAccounts.length > 0;
+  // Check if wallet is connected
+  const isConnected = isActive;
 
   // Check wallet connection status on load
   useEffect(() => {
     if (isConnected && activeAccount) {
       // Convert microalgos to algos (or in this case, VOI)
-      // The account might have a different property structure in the updated library
-      const microAlgos = activeAccount.amount || 0;
+      // The account structure was changed in newer versions
+      const microAlgos = activeAccount.amount ? activeAccount.amount : 0;
       setBalance(microAlgos / 1000000);
     }
     
     // Set up polling to refresh balance periodically
     const balanceInterval = setInterval(() => {
       if (isConnected && activeAccount) {
-        const microAlgos = activeAccount.amount || 0;
+        const microAlgos = activeAccount.amount ? activeAccount.amount : 0;
         setBalance(microAlgos / 1000000);
       }
     }, 30000); // Check every 30 seconds
@@ -42,11 +41,11 @@ export const useWalletInteraction = () => {
 
   const handleConnectWallet = async (walletType?: string) => {
     try {
-      if (walletType && providers[walletType]) {
-        await providers[walletType].connect();
-      } else {
-        // Reconnect all providers if no specific one is specified
-        await reconnectProviders();
+      if (walletType) {
+        const wallet = wallets.find(w => w.id === walletType);
+        if (wallet) {
+          await wallet.connect();
+        }
       }
     } catch (error) {
       console.error("Error connecting wallet:", error);
@@ -73,6 +72,6 @@ export const useWalletInteraction = () => {
     handleConnectWallet,
     updateBalanceForWager,
     updateBalanceForWin,
-    disconnectWallet
+    disconnectWallet: disconnect
   };
 };
