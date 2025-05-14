@@ -28,7 +28,7 @@ const WalletPanel: React.FC<WalletPanelProps> = ({
   onConnect,
   isMobile = false
 }) => {
-  const { activeAccount, wallets, connecting, connected, disconnect, connect } = useWallet();
+  const { activeAccount, connectedWallets, connectors } = useWallet();
   const { toast } = useToast();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -42,13 +42,16 @@ const WalletPanel: React.FC<WalletPanelProps> = ({
 
   const connectWallet = async (providerId: string) => {
     try {
-      await connect(providerId);
-      onConnect();
-      setIsDropdownOpen(false);
-      toast({
-        title: "Wallet Connected",
-        description: "Successfully connected to wallet.",
-      });
+      const selectedConnector = connectors.find(c => c.id === providerId);
+      if (selectedConnector) {
+        await selectedConnector.connect();
+        onConnect();
+        setIsDropdownOpen(false);
+        toast({
+          title: "Wallet Connected",
+          description: "Successfully connected to wallet.",
+        });
+      }
     } catch (error) {
       console.error("Failed to connect wallet:", error);
       toast({
@@ -61,11 +64,14 @@ const WalletPanel: React.FC<WalletPanelProps> = ({
 
   const handleDisconnect = async () => {
     try {
-      await disconnect();
-      toast({
-        title: "Wallet Disconnected",
-        description: "Your wallet has been disconnected.",
-      });
+      const activeConnector = connectedWallets[0];
+      if (activeConnector) {
+        await activeConnector.disconnect();
+        toast({
+          title: "Wallet Disconnected",
+          description: "Your wallet has been disconnected.",
+        });
+      }
     } catch (error) {
       console.error("Failed to disconnect wallet:", error);
     }
@@ -118,7 +124,7 @@ const WalletPanel: React.FC<WalletPanelProps> = ({
             sideOffset={5}
           >
             <WalletDropdownContent
-              providers={wallets}
+              providers={connectors}
               onConnect={connectWallet}
               onClose={() => setIsDropdownOpen(false)}
             />

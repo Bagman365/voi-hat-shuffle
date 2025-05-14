@@ -10,7 +10,7 @@ interface WalletProviderProps {
 }
 
 export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
-  const wallets = [
+  const connectors = [
     { id: 'pera', name: 'Pera Wallet', connector: PeraWalletConnect }, 
     { id: 'defly', name: 'Defly Wallet', connector: DeflyWalletConnect },
     { id: 'daffi', name: 'Daffi Wallet', connector: DaffiWalletConnect }
@@ -18,7 +18,7 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
 
   return (
     <UseWalletProvider
-      wallets={wallets}
+      connectors={connectors}
       nodeConfig={{ 
         network: 'voitest-v1', 
         nodeServer: 'https://testnet-api.voi.nodly.io',

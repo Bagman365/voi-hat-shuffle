@@ -5,7 +5,7 @@ import { useToast } from '@/hooks/use-toast';
 import { formatAddress } from '@/lib/walletUtils';
 
 export const useWalletInteraction = () => {
-  const { activeAccount, activeAccounts } = useWallet();
+  const { activeAccount } = useWallet();
   const [walletConnected, setWalletConnected] = useState<boolean>(false);
   const [balance, setBalance] = useState<number>(100);
   const [walletAddress, setWalletAddress] = useState<string>('0x1234...abcd');
