@@ -108,9 +108,11 @@ class BlockchainService {
       
       return {
         won,
-        amount: won ? (txInfo.amount / 1000000) * 3 : 0, // Triple the bet if won
+        // Fix for the type error - convert string to number if necessary
+        amount: won ? (Number(txInfo.amount) / 1000000) * 3 : 0, // Triple the bet if won
         transactionId: txId,
-        verificationHash: txInfo.block + txInfo.intra // Simplified verification hash
+        // Converting to string to ensure it's a string for the verification hash
+        verificationHash: `${txInfo.block}${txInfo.intra}` // Simplified verification hash
       };
     } catch (error) {
       console.error("Error getting game result:", error);
