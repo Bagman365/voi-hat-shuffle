@@ -9,5 +9,6 @@ interface Window {
     env: Record<string, string>;
     version: string;
     nextTick: (callback: Function) => void;
+    [key: string]: any; // Allow any other properties that might be expected
   };
 }

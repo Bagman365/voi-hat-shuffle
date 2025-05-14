@@ -21,15 +21,15 @@ export const useWalletInteraction = () => {
   // Check wallet connection status on load
   useEffect(() => {
     if (isConnected && activeAccount) {
-      // Use amount property correctly from the activeAccount
-      const microAlgos = activeAccount.amount || 0;
+      // Use the correct property name based on API version
+      const microAlgos = activeAccount.assets?.[0]?.amount || 0;
       setBalance(microAlgos / 1000000);
     }
     
     // Set up polling to refresh balance periodically
     const balanceInterval = setInterval(() => {
       if (isConnected && activeAccount) {
-        const microAlgos = activeAccount.amount || 0;
+        const microAlgos = activeAccount.assets?.[0]?.amount || 0;
         setBalance(microAlgos / 1000000);
       }
     }, 30000); // Check every 30 seconds

@@ -4,14 +4,20 @@
 
 import { Buffer } from 'buffer';
 
+type MinimalProcess = {
+  env: Record<string, string>;
+  version: string;
+  nextTick: (cb: Function) => void;
+};
+
 if (typeof window !== 'undefined') {
   window.global = window;
   // Add Buffer to window
   window.Buffer = window.Buffer || Buffer;
-  // Add process to window with correct typing
+  // Add minimal process object to window
   window.process = window.process || {
     env: {} as Record<string, string>,
     version: '',
     nextTick: function(cb: Function) { setTimeout(cb, 0); }
-  };
+  } as MinimalProcess;
 }

@@ -1,6 +1,6 @@
 
 import React, { ReactNode } from 'react';
-import { WalletProvider as UseWalletProvider } from '@txnlab/use-wallet-react';
+import { WalletProvider as UseWalletProvider, PROVIDER_ID } from '@txnlab/use-wallet-react';
 import { PeraWalletConnect } from '@perawallet/connect';
 import { DeflyWalletConnect } from '@blockshake/defly-connect';
 import { DaffiWalletConnect } from '@daffiwallet/connect';
@@ -32,21 +32,30 @@ const algodClient = new algosdk.Algodv2(
 
 // Initialize wallet connectors
 const walletConnectors = [
-  { id: 'pera-wallet', clientStatic: PeraWalletConnect },
-  { id: 'defly-wallet', clientStatic: DeflyWalletConnect },
-  { id: 'daffi-wallet', clientStatic: DaffiWalletConnect }
+  { id: PROVIDER_ID.PERA, clientStatic: PeraWalletConnect },
+  { id: PROVIDER_ID.DEFLY, clientStatic: DeflyWalletConnect },
+  { id: PROVIDER_ID.DAFFI, clientStatic: DaffiWalletConnect }
 ];
 
 export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
   return (
     <UseWalletProvider
-      connectors={walletConnectors}
-      network={network}
-      algodClient={algodClient}
+      value={{
+        providers: walletConnectors,
+        nodeConfig: {
+          network: network.genesisID,
+          nodeServer: network.algodServer,
+          nodePort: network.algodPort,
+          nodeToken: network.algodToken,
+          indexerServer: network.indexerServer,
+          indexerPort: network.indexerPort,
+          indexerToken: network.indexerToken
+        }
+      }}
     >
       {children}
     </UseWalletProvider>
   );
-}
+};
 
 export default WalletProvider;
