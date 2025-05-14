@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
-import { useWallet } from '@txnlab/use-wallet';
+import { useWalletClient } from '@txnlab/use-wallet';
 import WalletConnectButton from '@/components/wallet/WalletConnectButton';
 import WalletButton from '@/components/wallet/WalletButton';
 import ConnectedWalletContent from '@/components/wallet/ConnectedWalletContent';
@@ -28,7 +28,7 @@ const WalletPanel: React.FC<WalletPanelProps> = ({
   onConnect,
   isMobile = false
 }) => {
-  const { activeAccount, providers, isReady, connect, disconnect } = useWallet();
+  const { activeAccount, providers, isReady, connect, disconnect } = useWalletClient();
   const { toast } = useToast();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 

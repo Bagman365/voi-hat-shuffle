@@ -1,6 +1,6 @@
-export type WalletProvider = 'kibisis' | 'lute' | 'biatec' | 'walletconnect';
+export type WalletProvider = 'pera' | 'defly' | 'daffi' | 'walletconnect';
 
-import { useWallet } from '@txnlab/use-wallet';
+import { useWalletClient } from '@txnlab/use-wallet';
 
 // We'll keep the existing interface but implement it with the new wallet library
 // This helps maintain compatibility with existing components
@@ -16,7 +16,7 @@ const getWalletHook = () => {
 };
 
 const getCurrentWallet = () => {
-  // This will be replaced by the useWallet hook in components
+  // This will be replaced by the useWalletClient hook in components
   // Keeping this function for compatibility
   return null;
 };
@@ -24,25 +24,26 @@ const getCurrentWallet = () => {
 const checkWalletProviders = async () => {
   // Return standard providers
   return {
-    hasVera: true,
-    hasKibisis: true
+    hasPera: true,
+    hasDefly: true,
+    hasDaffi: true
   };
 };
 
 const connectWallet = async (provider: WalletProvider) => {
-  // This will be handled by the useWallet hook in components
+  // This will be handled by the useWalletClient hook in components
   // Keeping this function for compatibility
   return null;
 };
 
 const disconnect = async () => {
-  // This will be handled by the useWallet hook in components
+  // This will be handled by the useWalletClient hook in components
   // Keeping this function for compatibility
   return;
 };
 
 const refreshBalance = async (): Promise<number | null> => {
-  // This will be handled by the useWallet hook in components
+  // This will be handled by the useWalletClient hook in components
   // Keeping this function for compatibility
   return 100;
 };

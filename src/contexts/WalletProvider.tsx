@@ -1,10 +1,12 @@
 
 import React, { ReactNode } from 'react';
-import { PROVIDER_ID, ProvidersArray, WalletProvider as UseWalletProvider } from '@txnlab/use-wallet';
+import {
+  WalletProvider as TxnLabWalletProvider,
+  PROVIDER_ID as TXN_PROVIDER_ID
+} from '@txnlab/use-wallet';
 import { PeraWalletConnect } from '@perawallet/connect';
 import { DeflyWalletConnect } from '@blockshake/defly-connect';
 import { DaffiWalletConnect } from '@daffiwallet/connect';
-import { WalletConnectModalSign } from '@walletconnect/modal-sign-html';
 
 interface WalletProviderProps {
   children: ReactNode;
@@ -13,34 +15,19 @@ interface WalletProviderProps {
 export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
   // Initialize our supported wallets
   const pera = new PeraWalletConnect();
+  const defly = new DeflyWalletConnect();
+  const daffi = new DaffiWalletConnect();
   
-  // For future implementation if needed:
-  // const defly = new DeflyWalletConnect();
-  // const daffi = new DaffiWalletConnect();
-  
-  // Create WalletConnect modal controller
-  const wcModalController = {
-    projectId: 'your-project-id', // You'll need to get a proper project ID from WalletConnect
-    chains: ['voitest-v1'],
-    metadata: {
-      name: 'VOI Hat Monte',
-      description: 'Hat Monte game for VOI blockchain',
-      url: window.location.host,
-      icons: [`${window.location.origin}/favicon.ico`]
-    }
-  };
-
-  // Configure provider(s) to display
-  const providers: ProvidersArray = [
-    { id: PROVIDER_ID.PERA, clientStatic: pera }
-    // For future implementation if needed:
-    // { id: PROVIDER_ID.DEFLY, clientStatic: defly },
-    // { id: PROVIDER_ID.DAFFI, clientStatic: daffi },
-    // { id: PROVIDER_ID.WALLETCONNECT, clientStatic: walletConnect }
+  // Configure providers
+  const providers = [
+    { id: TXN_PROVIDER_ID.PERA, client: pera },
+    // Uncomment to enable these providers
+    // { id: TXN_PROVIDER_ID.DEFLY, client: defly },
+    // { id: TXN_PROVIDER_ID.DAFFI, client: daffi },
   ];
 
   return (
-    <UseWalletProvider
+    <TxnLabWalletProvider
       providers={providers}
       nodeConfig={{ 
         network: 'voitest-v1', 
@@ -49,7 +36,7 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
       }}
     >
       {children}
-    </UseWalletProvider>
+    </TxnLabWalletProvider>
   );
 };
 

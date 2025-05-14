@@ -1,11 +1,11 @@
 
 import { useState, useEffect } from 'react';
-import { useWallet } from '@txnlab/use-wallet';
+import { useWalletClient } from '@txnlab/use-wallet';
 import { useToast } from '@/hooks/use-toast';
 import { formatAddress } from '@/lib/walletUtils';
 
 export const useWalletInteraction = () => {
-  const { activeAccount, providers, isReady } = useWallet();
+  const { activeAccount, connectedAccounts, providers, isReady } = useWalletClient();
   const [walletConnected, setWalletConnected] = useState<boolean>(false);
   const [balance, setBalance] = useState<number>(100);
   const [walletAddress, setWalletAddress] = useState<string>('0x1234...abcd');

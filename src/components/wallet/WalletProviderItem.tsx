@@ -26,7 +26,10 @@ const WalletProviderItem: React.FC<WalletProviderItemProps> = ({
             src={provider.metadata.icon} 
             alt={provider.metadata.name} 
             className="w-6 h-6"
-            onError={(e) => (e.currentTarget.src = '🟣')}
+            onError={(e) => {
+              const target = e.target as HTMLImageElement;
+              target.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="purple"><circle cx="12" cy="12" r="10"/></svg>';
+            }}
           />
         </div>
         <span className="font-medium">{provider.metadata.name}</span>
