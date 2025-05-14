@@ -1,11 +1,5 @@
-
 import { createRoot } from 'react-dom/client'
 import App from './App.tsx'
 import './index.css'
-import WalletProvider from './contexts/WalletProvider.tsx'
 
-createRoot(document.getElementById("root")!).render(
-  <WalletProvider>
-    <App />
-  </WalletProvider>
-);
+createRoot(document.getElementById("root")!).render(<App />);
