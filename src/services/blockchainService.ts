@@ -1,3 +1,4 @@
+
 import algosdk from 'algosdk';
 import { toast } from "@/hooks/use-toast";
 import walletService from './walletService';
@@ -105,17 +106,22 @@ class BlockchainService {
       // In production, this should come from the blockchain
       const won = Math.random() < 0.33; // 1/3 chance of winning
       
-      // Fix the type error by ensuring the amount is always treated as a number
-      const betAmount: number = typeof txInfo.amount === 'string' 
-        ? parseInt(txInfo.amount, 10) || 0 
-        : (typeof txInfo.amount === 'number' ? txInfo.amount : 0);
+      // Fix the type error by ensuring the amount is correctly converted to a number
+      let betAmount = 0;
+      if (txInfo && txInfo.amount) {
+        if (typeof txInfo.amount === 'string') {
+          betAmount = parseInt(txInfo.amount, 10) || 0;
+        } else if (typeof txInfo.amount === 'number') {
+          betAmount = txInfo.amount;
+        }
+      }
       
       return {
         won,
         amount: won ? (betAmount / 1000000) * 3 : 0, // Triple the bet if won
         transactionId: txId,
         // Ensure verification hash is always a string
-        verificationHash: `${txInfo.block || ''}${txInfo.intra || ''}` // Simplified verification hash
+        verificationHash: txInfo && txInfo.block ? `${txInfo.block}${txInfo.intra || ''}` : `verify-${Date.now()}`
       };
     } catch (error) {
       console.error("Error getting game result:", error);
