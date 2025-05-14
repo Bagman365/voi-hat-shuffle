@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { useWallet } from "@txnlab/use-wallet";
+import { useWalletContext } from "@txnlab/use-wallet";
 import { useToast } from '@/hooks/use-toast';
 import algosdk from 'algosdk';
 
@@ -10,7 +10,7 @@ export const useWalletInteraction = () => {
   const [walletAddress, setWalletAddress] = useState<string>('');
   const { toast } = useToast();
   
-  const { activeAccount, activeAddress, providers, isActive, getAccountInfo } = useWallet();
+  const { activeAccount, activeAddress, providers, isActive, getAccountInfo } = useWalletContext();
 
   // Check wallet connection status on load
   useEffect(() => {

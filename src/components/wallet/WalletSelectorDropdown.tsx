@@ -42,6 +42,9 @@ const WalletSelectorDropdown: React.FC<WalletSelectorDropdownProps> = ({
     }
   };
 
+  // Check if providers is undefined or empty
+  const availableProviders = providers || [];
+
   return (
     <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
       <DropdownMenuTrigger asChild>
@@ -72,7 +75,7 @@ const WalletSelectorDropdown: React.FC<WalletSelectorDropdownProps> = ({
           </div>
           
           <div className="space-y-3">
-            {providers.map((provider) => (
+            {availableProviders.map((provider) => (
               <div key={provider.metadata.id} className="flex items-center justify-between p-2 rounded-lg hover:bg-purple-900/20 transition-colors">
                 <div className="flex items-center gap-3">
                   <div className="flex items-center justify-center w-10 h-10 rounded-full bg-purple-900/30 text-lg">

@@ -1,12 +1,12 @@
 
 import { useState } from 'react';
-import { useWallet } from "@txnlab/use-wallet";
+import { useWalletContext } from "@txnlab/use-wallet";
 import { useToast } from '@/hooks/use-toast';
 
 export function useWalletPanel() {
   const { toast } = useToast();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const { providers, connect, disconnect, isActive } = useWallet();
+  const { providers, connect, disconnect, isActive } = useWalletContext();
 
   const handleWalletConnect = async () => {
     setIsDropdownOpen(true);
