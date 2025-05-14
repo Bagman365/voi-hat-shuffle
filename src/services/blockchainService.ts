@@ -106,12 +106,15 @@ class BlockchainService {
       // In production, this should come from the blockchain
       const won = Math.random() < 0.33; // 1/3 chance of winning
       
+      // Fix for the type error - explicitly convert string to number
+      const betAmount = typeof txInfo.amount === 'string' ? 
+        Number(txInfo.amount) : txInfo.amount;
+      
       return {
         won,
-        // Fix for the type error - convert string to number if necessary
-        amount: won ? (Number(txInfo.amount) / 1000000) * 3 : 0, // Triple the bet if won
+        amount: won ? (betAmount / 1000000) * 3 : 0, // Triple the bet if won
         transactionId: txId,
-        // Converting to string to ensure it's a string for the verification hash
+        // Ensure verification hash is always a string
         verificationHash: `${txInfo.block}${txInfo.intra}` // Simplified verification hash
       };
     } catch (error) {
