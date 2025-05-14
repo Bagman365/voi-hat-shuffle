@@ -3,7 +3,7 @@ import React, { ReactNode } from 'react';
 import { DeflyWalletConnect } from '@blockshake/defly-connect';
 import { PeraWalletConnect } from '@perawallet/connect';
 import { DaffiWalletConnect } from '@daffiwallet/connect';
-import { Provider } from '@txnlab/use-wallet';
+import { WalletProvider as TxnLabWalletProvider } from '@txnlab/use-wallet';
 
 interface WalletProviderProps {
   children: ReactNode;
@@ -17,7 +17,7 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
   ];
 
   return (
-    <Provider
+    <TxnLabWalletProvider
       wallets={wallets}
       nodeConfig={{ 
         network: 'voitest-v1', 
@@ -26,7 +26,7 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
       }}
     >
       {children}
-    </Provider>
+    </TxnLabWalletProvider>
   );
 };
 
