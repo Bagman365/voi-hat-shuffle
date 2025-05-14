@@ -1,6 +1,6 @@
 
 import React, { ReactNode } from 'react';
-import { WalletProvider as TxnLabWalletProvider } from '@txnlab/use-wallet';
+import { Provider } from '@txnlab/use-wallet';
 
 interface WalletProviderProps {
   children: ReactNode;
@@ -8,7 +8,7 @@ interface WalletProviderProps {
 
 export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
   return (
-    <TxnLabWalletProvider
+    <Provider
       wallets={[
         { id: 'pera', name: 'Pera Wallet' }, 
         { id: 'defly', name: 'Defly Wallet' },
@@ -21,7 +21,7 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
       }}
     >
       {children}
-    </TxnLabWalletProvider>
+    </Provider>
   );
 };
 
