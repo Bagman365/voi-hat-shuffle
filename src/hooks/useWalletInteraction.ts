@@ -1,11 +1,11 @@
 
 import { useState, useEffect } from 'react';
-import { useWalletClient } from '@txnlab/use-wallet';
+import { useWallet } from '@txnlab/use-wallet';
 import { useToast } from '@/hooks/use-toast';
 import { formatAddress } from '@/lib/walletUtils';
 
 export const useWalletInteraction = () => {
-  const { activeAccount, connectedAccounts, providers, isReady } = useWalletClient();
+  const { activeAccount, connectedAccounts } = useWallet();
   const [walletConnected, setWalletConnected] = useState<boolean>(false);
   const [balance, setBalance] = useState<number>(100);
   const [walletAddress, setWalletAddress] = useState<string>('0x1234...abcd');
@@ -13,7 +13,7 @@ export const useWalletInteraction = () => {
 
   // Check wallet connection status when the wallet state changes
   useEffect(() => {
-    if (isReady && activeAccount) {
+    if (activeAccount) {
       setWalletConnected(true);
       setWalletAddress(activeAccount.address);
       
@@ -22,7 +22,7 @@ export const useWalletInteraction = () => {
     } else {
       setWalletConnected(false);
     }
-  }, [activeAccount, isReady]);
+  }, [activeAccount]);
 
   const handleConnectWallet = async () => {
     // This is just a stub now - actual connection will be handled by WalletPanel

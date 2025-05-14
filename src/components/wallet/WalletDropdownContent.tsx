@@ -26,7 +26,7 @@ const WalletDropdownContent: React.FC<WalletDropdownContentProps> = ({
       <div className="space-y-3">
         {providers?.map((provider) => (
           <WalletProviderItem
-            key={provider.metadata.id}
+            key={provider.id}
             provider={provider}
             onConnect={onConnect}
           />
