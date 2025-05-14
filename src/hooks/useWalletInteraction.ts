@@ -1,11 +1,11 @@
 
 import { useState, useEffect } from 'react';
-import { useWalletUI } from '@txnlab/use-wallet';
+import { useWallet } from '@txnlab/use-wallet';
 import { useToast } from '@/hooks/use-toast';
 import { formatAddress } from '@/lib/walletUtils';
 
 export const useWalletInteraction = () => {
-  const { activeAccount, connectedAccounts } = useWalletUI();
+  const { activeAccount, connectedAccounts } = useWallet();
   const [walletConnected, setWalletConnected] = useState<boolean>(false);
   const [balance, setBalance] = useState<number>(100);
   const [walletAddress, setWalletAddress] = useState<string>('0x1234...abcd');
@@ -26,7 +26,7 @@ export const useWalletInteraction = () => {
 
   const handleConnectWallet = async () => {
     // This is just a stub now - actual connection will be handled by WalletPanel
-    // using the useWalletUI hook directly
+    // using the useWallet hook directly
     setWalletConnected(true);
   };
 
