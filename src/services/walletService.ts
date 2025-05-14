@@ -1,5 +1,6 @@
 
 import { toast } from "@/hooks/use-toast";
+import algosdk from 'algosdk';
 
 interface WalletInfo {
   name: string;
@@ -7,7 +8,7 @@ interface WalletInfo {
   balance: number;
 }
 
-export type WalletProvider = 'vera' | 'kibisis' | null;
+export type WalletProvider = 'kibisis' | 'lute' | 'biatec' | 'walletconnect' | null;
 
 class WalletService {
   private currentWallet: WalletInfo | null = null;
@@ -21,11 +22,9 @@ class WalletService {
     const hasKibisis = typeof window !== 'undefined' && 'kibisis' in window;
     
     // Check for Vera wallet (typically on mobile devices)
-    // This is a simplified check - actual implementation depends on Vera's detection method
     const hasVera = typeof window !== 'undefined' && 
       (navigator.userAgent.includes('VOIWallet') || 
        navigator.userAgent.includes('PeraWallet') ||
-       // Additional checks for Vera/Pera wallet here
        false);
     
     return { hasVera, hasKibisis };
@@ -33,12 +32,19 @@ class WalletService {
 
   public async connectWallet(provider: WalletProvider): Promise<WalletInfo | null> {
     try {
-      if (provider === 'kibisis') {
-        return await this.connectKibisis();
-      } else if (provider === 'vera') {
-        return await this.connectVera();
+      // Different connection logic based on wallet provider
+      switch (provider) {
+        case 'kibisis':
+          return await this.connectKibisis();
+        case 'lute':
+          return await this.connectLute();
+        case 'biatec':
+          return await this.connectBiatec();
+        case 'walletconnect':
+          return await this.connectWalletConnect();
+        default:
+          return null;
       }
-      return null;
     } catch (error) {
       console.error("Failed to connect wallet:", error);
       toast({
@@ -82,40 +88,42 @@ class WalletService {
       return null;
     }
   }
-  
-  private async connectVera(): Promise<WalletInfo | null> {
-    // Simplified implementation for Vera/Pera wallet
-    // In a production app, you would use the official Pera SDK or VOI-specific SDK
+
+  private async connectLute(): Promise<WalletInfo | null> {
+    // Implementation for Lute wallet
+    // Similar to Kibisis but using the Lute API
+    this.currentWallet = {
+      name: 'Lute',
+      address: '0xLute' + Math.floor(Math.random() * 10000),
+      balance: 100 // Demo balance
+    };
     
-    // If on mobile, attempt to deep link to Vera wallet
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    this.currentProvider = 'lute';
+    return this.currentWallet;
+  }
+
+  private async connectBiatec(): Promise<WalletInfo | null> {
+    // Implementation for Biatec wallet
+    this.currentWallet = {
+      name: 'Biatec',
+      address: '0xBiatec' + Math.floor(Math.random() * 10000),
+      balance: 100 // Demo balance
+    };
     
-    if (isMobile) {
-      try {
-        // Simulated connection - in reality, this would use the Pera/Vera SDK
-        // This is a placeholder to demonstrate the flow
-        this.currentWallet = {
-          name: 'Vera',
-          address: '0xvera' + Math.floor(Math.random() * 10000),
-          balance: 100 // Demo balance
-        };
-        
-        this.currentProvider = 'vera';
-        return this.currentWallet;
-      } catch (error) {
-        console.error("Vera connection error:", error);
-        
-        // If failed, suggest opening the app or installing it
-        window.location.href = 'https://perawallet.app/download/';
-        return null;
-      }
-    } else {
-      toast({
-        title: "Mobile Wallet",
-        description: "Vera wallet is primarily for mobile devices. Please use Kibisis on desktop.",
-      });
-      return null;
-    }
+    this.currentProvider = 'biatec';
+    return this.currentWallet;
+  }
+
+  private async connectWalletConnect(): Promise<WalletInfo | null> {
+    // Implementation for WalletConnect
+    this.currentWallet = {
+      name: 'WalletConnect',
+      address: '0xWC' + Math.floor(Math.random() * 10000),
+      balance: 100 // Demo balance
+    };
+    
+    this.currentProvider = 'walletconnect';
+    return this.currentWallet;
   }
   
   public async disconnect(): Promise<void> {
@@ -140,6 +148,39 @@ class WalletService {
     return this.currentProvider;
   }
 
+  // Sign a transaction with the current wallet
+  public async signTransaction(transaction: algosdk.Transaction | algosdk.Transaction[]): Promise<Uint8Array> {
+    if (!this.currentWallet || !this.currentProvider) {
+      throw new Error("No wallet connected");
+    }
+
+    const txnsToSign = Array.isArray(transaction) ? transaction : [transaction];
+    const encodedTxns = txnsToSign.map(txn => algosdk.encodeUnsignedTransaction(txn));
+
+    try {
+      let signedTxns;
+      
+      switch (this.currentProvider) {
+        case 'kibisis':
+          // @ts-ignore - kibisis is injected by the extension
+          signedTxns = await window.kibisis.signTransaction(encodedTxns);
+          break;
+        case 'lute':
+          // @ts-ignore - lute is injected by the extension
+          signedTxns = await window.lute.signTransaction(encodedTxns);
+          break;
+        // Add cases for other providers
+        default:
+          throw new Error("Unsupported wallet provider");
+      }
+      
+      return signedTxns;
+    } catch (error) {
+      console.error("Error signing transaction:", error);
+      throw error;
+    }
+  }
+
   // This is a mock function, in a real application this would be called periodically
   public async refreshBalance(): Promise<number | null> {
     if (!this.currentWallet || !this.currentProvider) return null;
@@ -150,13 +191,14 @@ class WalletService {
         const balance = await window.kibisis.getBalance(this.currentWallet.address);
         this.currentWallet.balance = balance / 1000000; // Convert from microVOI to VOI
         return this.currentWallet.balance;
-      } else if (this.currentProvider === 'vera') {
-        // In a real implementation, this would use the Vera/Pera SDK
-        // Mock implementation for demo
-        this.currentWallet.balance = Math.floor(Math.random() * 200);
+      } else {
+        // For other wallets, use a generic approach
+        // In production, this would use the appropriate wallet API
+        const response = await fetch(`https://voi-testnet.algorand.network/v2/accounts/${this.currentWallet.address}`);
+        const data = await response.json();
+        this.currentWallet.balance = data.amount / 1000000;
         return this.currentWallet.balance;
       }
-      return null;
     } catch (error) {
       console.error("Error refreshing balance:", error);
       return null;

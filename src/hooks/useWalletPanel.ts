@@ -21,7 +21,7 @@ export function useWalletPanel() {
   };
 
   const connectWallet = async (provider: WalletProvider) => {
-    if (!provider) return;
+    if (!provider) return false;
     
     const walletInfo = await walletService.connectWallet(provider);
     

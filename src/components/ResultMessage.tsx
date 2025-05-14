@@ -1,69 +1,108 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { X } from 'lucide-react';
+import { ExternalLink, CheckCircle, XCircle } from 'lucide-react';
 
 interface ResultMessageProps {
   won: boolean;
   amount: number;
   onClose: () => void;
+  transactionId?: string;
+  verificationUrl?: string;
 }
 
-const ResultMessage: React.FC<ResultMessageProps> = ({ won, amount, onClose }) => {
+const ResultMessage: React.FC<ResultMessageProps> = ({ 
+  won, 
+  amount, 
+  onClose,
+  transactionId,
+  verificationUrl
+}) => {
   return (
-    <motion.div
-      className="absolute inset-0 flex items-center justify-center z-10"
+    <motion.div 
+      className="fixed inset-0 flex items-center justify-center z-50 bg-black/50 backdrop-blur-sm"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.3 }}
     >
-      <div className="absolute inset-0 bg-black/50" onClick={onClose} />
-      
-      <motion.div
-        className={`
-          relative p-8 rounded-lg shadow-xl backdrop-blur-lg
-          ${won ? 'bg-gradient-to-r from-purple-600/80 to-blue-600/80' : 'bg-gradient-to-r from-red-600/80 to-purple-600/80'}
-          border-2 ${won ? 'border-indigo-400' : 'border-red-400'}
-        `}
+      <motion.div 
+        className="bg-gradient-to-b from-gray-900 to-gray-800 rounded-xl p-6 max-w-md w-[90%] shadow-xl border border-purple-500/30"
         initial={{ scale: 0.8, y: 20 }}
         animate={{ scale: 1, y: 0 }}
-        transition={{ type: 'spring', damping: 12 }}
+        transition={{ type: "spring", damping: 12 }}
       >
-        <button 
-          className="absolute top-2 right-2 text-white/70 hover:text-white"
-          onClick={onClose}
-        >
-          <X size={20} />
-        </button>
-        
         <div className="text-center">
-          <div className="text-4xl mb-2">
-            {won ? '🎉' : '😢'}
-          </div>
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1.2, rotateZ: won ? 10 : -10 }}
+            transition={{ delay: 0.2, duration: 0.4, type: "spring" }}
+            className="mx-auto mb-4"
+          >
+            {won ? (
+              <CheckCircle className="w-16 h-16 text-green-400 mx-auto" />
+            ) : (
+              <XCircle className="w-16 h-16 text-red-400 mx-auto" />
+            )}
+          </motion.div>
           
-          <h3 className="text-2xl font-bold text-white mb-2">
-            {won ? 'You Found Victor!' : 'Try Again'}
-          </h3>
+          <h2 className="text-2xl font-bold mb-2 text-white">
+            {won ? 'You Won!' : 'Better Luck Next Time!'}
+          </h2>
           
           {won && (
-            <motion.div 
-              className="text-xl text-white"
-              initial={{ scale: 0.7 }}
-              animate={{ scale: 1.2 }}
-              transition={{ 
-                repeat: 3,
-                repeatType: 'reverse',
-                duration: 0.6
-              }}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+              className="text-xl font-medium text-green-400 mb-4"
             >
               +{amount} VOI
             </motion.div>
           )}
           
-          {!won && (
-            <p className="text-white/80">Victor was under a different hat.</p>
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+            className="text-gray-300 mb-6"
+          >
+            {won 
+              ? 'Congratulations! Your prize has been added to your wallet.' 
+              : 'The ball was under a different hat. Try again!'}
+          </motion.p>
+
+          {/* Verification link to blockchain explorer */}
+          {verificationUrl && (
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.6 }}
+              className="mb-5"
+            >
+              <p className="text-sm text-gray-400 mb-2">Blockchain verified result:</p>
+              <a 
+                href={verificationUrl} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="flex items-center justify-center text-purple-400 hover:text-purple-300 text-sm"
+              >
+                <span className="truncate max-w-[200px]">
+                  {transactionId || 'View Transaction'}
+                </span>
+                <ExternalLink className="ml-1 h-3 w-3" />
+              </a>
+            </motion.div>
           )}
+          
+          <motion.button
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.7 }}
+            onClick={onClose}
+            className="px-6 py-2 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-full transition-colors"
+          >
+            Continue
+          </motion.button>
         </div>
       </motion.div>
     </motion.div>

@@ -31,11 +31,15 @@ const GameBoard: React.FC<GameBoardProps> = ({
     showResult,
     won,
     handleHatSelect,
-    setShowResult
+    setShowResult,
+    verificationHash,
+    verificationUrl,
+    isBetting
   } = useGameLogic({
     isPlaying,
     shuffleSpeed,
-    onGameComplete
+    onGameComplete,
+    wagerAmount
   });
   
   return (
@@ -56,7 +60,7 @@ const GameBoard: React.FC<GameBoardProps> = ({
             handleHatSelect={handleHatSelect}
             isShuffling={isShuffling}
             selectedHat={selectedHat}
-            isPlaying={isPlaying}
+            isPlaying={isPlaying || isBetting}
             isMobile={isMobile}
           />
         </div>
@@ -68,6 +72,8 @@ const GameBoard: React.FC<GameBoardProps> = ({
           won={won} 
           amount={won ? wagerAmount * 2 : 0} 
           onClose={() => setShowResult(false)} 
+          transactionId={verificationHash || undefined}
+          verificationUrl={verificationUrl || undefined}
         />
       )}
     </div>
