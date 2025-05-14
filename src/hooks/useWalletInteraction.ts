@@ -10,24 +10,30 @@ export const useWalletInteraction = () => {
   const { 
     activeAccount,
     activeAddress,
-    isConnected,
-    connect,
-    disconnect
+    connectedAccounts,
+    providers,
+    clientStates,
+    reconnectProviders,
+    disconnect: disconnectWallet
   } = useWallet();
+
+  // Check if any wallet is connected
+  const isConnected = connectedAccounts.length > 0;
 
   // Check wallet connection status on load
   useEffect(() => {
     if (isConnected && activeAccount) {
-      if (activeAccount.amount !== undefined) {
-        // Convert from microalgos to algos (or in this case, VOI)
-        setBalance(activeAccount.amount / 1000000);
-      }
+      // Convert microalgos to algos (or in this case, VOI)
+      // The account might have a different property structure in the updated library
+      const microAlgos = activeAccount.amount || 0;
+      setBalance(microAlgos / 1000000);
     }
     
     // Set up polling to refresh balance periodically
     const balanceInterval = setInterval(() => {
-      if (isConnected && activeAccount && activeAccount.amount !== undefined) {
-        setBalance(activeAccount.amount / 1000000);
+      if (isConnected && activeAccount) {
+        const microAlgos = activeAccount.amount || 0;
+        setBalance(microAlgos / 1000000);
       }
     }, 30000); // Check every 30 seconds
     
@@ -36,7 +42,12 @@ export const useWalletInteraction = () => {
 
   const handleConnectWallet = async (walletType?: string) => {
     try {
-      await connect(walletType);
+      if (walletType && providers[walletType]) {
+        await providers[walletType].connect();
+      } else {
+        // Reconnect all providers if no specific one is specified
+        await reconnectProviders();
+      }
     } catch (error) {
       console.error("Error connecting wallet:", error);
       toast({
@@ -62,6 +73,6 @@ export const useWalletInteraction = () => {
     handleConnectWallet,
     updateBalanceForWager,
     updateBalanceForWin,
-    disconnectWallet: disconnect
+    disconnectWallet
   };
 };

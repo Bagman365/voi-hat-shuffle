@@ -1,6 +1,6 @@
 
 import React, { ReactNode } from 'react';
-import { WalletProvider as UseWalletProvider } from '@txnlab/use-wallet-react';
+import { WalletProvider as UseWalletProvider, PROVIDER_ID } from '@txnlab/use-wallet-react';
 import { PeraWalletConnect } from '@perawallet/connect';
 import { DeflyWalletConnect } from '@blockshake/defly-connect';
 import { DaffiWalletConnect } from '@daffiwallet/connect';
@@ -27,11 +27,11 @@ const VOI_NETWORK = {
 export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
   return (
     <UseWalletProvider
-      wallets={[
-        { id: 'pera-wallet', name: 'Pera', wallet: peraWallet },
-        { id: 'defly-wallet', name: 'Defly', wallet: deflyWallet },
-        { id: 'daffi-wallet', name: 'Daffi', wallet: daffiWallet },
-      ]}
+      providers={{
+        [PROVIDER_ID.PERA]: peraWallet,
+        [PROVIDER_ID.DEFLY]: deflyWallet,
+        [PROVIDER_ID.DAFFI]: daffiWallet,
+      }}
       nodeConfig={{
         network: 'voi',
         nodeServer: VOI_NETWORK.nodeServer,

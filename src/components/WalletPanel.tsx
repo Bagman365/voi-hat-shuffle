@@ -7,7 +7,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useWallet } from '@txnlab/use-wallet-react';
+import { useWallet, PROVIDER_ID } from '@txnlab/use-wallet-react';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 
@@ -28,9 +28,10 @@ const WalletPanel: React.FC<WalletPanelProps> = ({
 }) => {
   const { toast } = useToast();
   const { 
-    wallets, 
-    disconnect,
-    connect
+    providers,
+    clientStates,
+    activeAddress,
+    disconnect: disconnectWallet,
   } = useWallet();
   
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -45,15 +46,17 @@ const WalletPanel: React.FC<WalletPanelProps> = ({
     setIsDropdownOpen(true);
   };
 
-  const connectWallet = async (walletId: string) => {
+  const connectWallet = async (providerId: string) => {
     try {
-      await connect(walletId);
-      onConnect();
-      setIsDropdownOpen(false);
-      toast({
-        title: `Wallet Connected`,
-        description: `Successfully connected to wallet.`,
-      });
+      if (providers[providerId]) {
+        await providers[providerId].connect();
+        onConnect();
+        setIsDropdownOpen(false);
+        toast({
+          title: `Wallet Connected`,
+          description: `Successfully connected to wallet.`,
+        });
+      }
     } catch (error) {
       console.error("Error connecting wallet:", error);
       toast({
@@ -65,7 +68,7 @@ const WalletPanel: React.FC<WalletPanelProps> = ({
   };
 
   const handleDisconnect = async () => {
-    await disconnect();
+    await disconnectWallet();
     window.location.reload(); // Simple way to reset the app state
   };
 
@@ -76,6 +79,19 @@ const WalletPanel: React.FC<WalletPanelProps> = ({
       description: "Wallet address copied to clipboard",
     });
   };
+
+  // Map of provider IDs to readable names and emojis
+  const providerDetails: Record<string, { name: string, emoji: string }> = {
+    [PROVIDER_ID.PERA]: { name: 'Pera', emoji: '🟣' },
+    [PROVIDER_ID.DEFLY]: { name: 'Defly', emoji: '🔵' },
+    [PROVIDER_ID.DAFFI]: { name: 'Daffi', emoji: '🟡' },
+  };
+
+  // Get available wallet providers
+  const availableWallets = Object.keys(providers).map(key => ({
+    id: key,
+    ...providerDetails[key]
+  }));
 
   return (
     <div className={cn(
@@ -188,12 +204,11 @@ const WalletPanel: React.FC<WalletPanelProps> = ({
               </div>
               
               <div className="space-y-3">
-                {wallets.map((wallet) => (
-                  <div key={wallet.name} className="flex items-center justify-between p-2 rounded-lg hover:bg-purple-900/20 transition-colors">
+                {availableWallets.map((wallet) => (
+                  <div key={wallet.id} className="flex items-center justify-between p-2 rounded-lg hover:bg-purple-900/20 transition-colors">
                     <div className="flex items-center gap-3">
                       <div className="flex items-center justify-center w-10 h-10 rounded-full bg-purple-900/30 text-lg">
-                        {wallet.name === 'Pera' ? '🟣' : 
-                         wallet.name === 'Defly' ? '🔵' : '🟡'}
+                        {wallet.emoji}
                       </div>
                       <span className="font-medium">{wallet.name}</span>
                     </div>

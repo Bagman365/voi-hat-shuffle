@@ -1,4 +1,5 @@
 
+import './wallet-polyfill' // Must be imported before any wallet libraries
 import { createRoot } from 'react-dom/client'
 import App from './App.tsx'
 import './index.css'
