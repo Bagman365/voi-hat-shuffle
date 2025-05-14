@@ -1,6 +1,6 @@
 export type WalletProvider = 'pera' | 'defly' | 'daffi' | 'walletconnect';
 
-import { useWalletClient } from '@txnlab/use-wallet';
+import { useWallet } from '@txnlab/use-wallet-react';
 
 // We'll keep the existing interface but implement it with the new wallet library
 // This helps maintain compatibility with existing components
@@ -16,7 +16,7 @@ const getWalletHook = () => {
 };
 
 const getCurrentWallet = () => {
-  // This will be replaced by the useWalletClient hook in components
+  // This will be replaced by the useWallet hook in components
   // Keeping this function for compatibility
   return null;
 };
@@ -31,19 +31,19 @@ const checkWalletProviders = async () => {
 };
 
 const connectWallet = async (provider: WalletProvider) => {
-  // This will be handled by the useWalletClient hook in components
+  // This will be handled by the useWallet hook in components
   // Keeping this function for compatibility
   return null;
 };
 
 const disconnect = async () => {
-  // This will be handled by the useWalletClient hook in components
+  // This will be handled by the useWallet hook in components
   // Keeping this function for compatibility
   return;
 };
 
 const refreshBalance = async (): Promise<number | null> => {
-  // This will be handled by the useWalletClient hook in components
+  // This will be handled by the useWallet hook in components
   // Keeping this function for compatibility
   return 100;
 };
