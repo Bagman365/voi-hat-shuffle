@@ -1,6 +1,6 @@
-export type WalletProvider = 'pera' | 'defly' | 'daffi' | 'walletconnect';
+export type WalletProvider = 'kibisis' | 'lute' | 'biatec' | 'walletconnect';
 
-import { useWallet } from '@txnlab/use-wallet-react';
+import { useWallet } from '@txnlab/use-wallet';
 
 // We'll keep the existing interface but implement it with the new wallet library
 // This helps maintain compatibility with existing components
@@ -24,9 +24,8 @@ const getCurrentWallet = () => {
 const checkWalletProviders = async () => {
   // Return standard providers
   return {
-    hasPera: true,
-    hasDefly: true,
-    hasDaffi: true
+    hasVera: true,
+    hasKibisis: true
   };
 };
 
