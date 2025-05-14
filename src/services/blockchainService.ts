@@ -1,4 +1,3 @@
-
 import algosdk from 'algosdk';
 import { toast } from "@/hooks/use-toast";
 import walletService from './walletService';
@@ -106,10 +105,10 @@ class BlockchainService {
       // In production, this should come from the blockchain
       const won = Math.random() < 0.33; // 1/3 chance of winning
       
-      // Ensure the amount is always a number
-      const betAmount = typeof txInfo.amount === 'string' 
-        ? parseInt(txInfo.amount, 10) 
-        : txInfo.amount || 0;
+      // Fix the type error by ensuring the amount is always treated as a number
+      const betAmount: number = typeof txInfo.amount === 'string' 
+        ? parseInt(txInfo.amount, 10) || 0 
+        : (typeof txInfo.amount === 'number' ? txInfo.amount : 0);
       
       return {
         won,
