@@ -106,16 +106,17 @@ class BlockchainService {
       // In production, this should come from the blockchain
       const won = Math.random() < 0.33; // 1/3 chance of winning
       
-      // Fix for the type error - explicitly convert string to number
-      const betAmount = typeof txInfo.amount === 'string' ? 
-        Number(txInfo.amount) : txInfo.amount;
+      // Ensure the amount is always a number
+      const betAmount = typeof txInfo.amount === 'string' 
+        ? parseInt(txInfo.amount, 10) 
+        : txInfo.amount || 0;
       
       return {
         won,
         amount: won ? (betAmount / 1000000) * 3 : 0, // Triple the bet if won
         transactionId: txId,
         // Ensure verification hash is always a string
-        verificationHash: `${txInfo.block}${txInfo.intra}` // Simplified verification hash
+        verificationHash: `${txInfo.block || ''}${txInfo.intra || ''}` // Simplified verification hash
       };
     } catch (error) {
       console.error("Error getting game result:", error);
