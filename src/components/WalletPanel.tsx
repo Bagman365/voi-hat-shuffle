@@ -28,7 +28,7 @@ const WalletPanel: React.FC<WalletPanelProps> = ({
   onConnect,
   isMobile = false
 }) => {
-  const { activeAccount, providers, connect, disconnect } = useWallet();
+  const { activeAccount, wallets, connecting, connected, disconnect, connect } = useWallet();
   const { toast } = useToast();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -118,7 +118,7 @@ const WalletPanel: React.FC<WalletPanelProps> = ({
             sideOffset={5}
           >
             <WalletDropdownContent
-              providers={providers}
+              providers={wallets}
               onConnect={connectWallet}
               onClose={() => setIsDropdownOpen(false)}
             />
