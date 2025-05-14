@@ -1,44 +1,22 @@
 
 import { useState, useEffect } from 'react';
-import { useWalletContext } from "@txnlab/use-wallet";
+import walletService from '@/services/walletService';
 import { useToast } from '@/hooks/use-toast';
-import algosdk from 'algosdk';
 
 export const useWalletInteraction = () => {
   const [walletConnected, setWalletConnected] = useState<boolean>(false);
-  const [balance, setBalance] = useState<number>(0);
-  const [walletAddress, setWalletAddress] = useState<string>('');
+  const [balance, setBalance] = useState<number>(100);
+  const [walletAddress, setWalletAddress] = useState<string>('0x1234...abcd');
   const { toast } = useToast();
-  
-  const { activeAccount, activeAddress, providers, isActive, getAccountInfo } = useWalletContext();
 
   // Check wallet connection status on load
   useEffect(() => {
     const checkCurrentWallet = async () => {
-      if (activeAddress && isActive) {
+      const currentWallet = walletService.getCurrentWallet();
+      if (currentWallet) {
         setWalletConnected(true);
-        setWalletAddress(activeAddress);
-        
-        try {
-          // Get account info for balance
-          if (activeAccount) {
-            const voiBalance = activeAccount.amount ? 
-              algosdk.microalgosToAlgos(activeAccount.amount) : 0;
-            setBalance(voiBalance);
-          } else if (getAccountInfo) {
-            const accountInfo = await getAccountInfo(activeAddress);
-            const voiBalance = accountInfo ? 
-              algosdk.microalgosToAlgos(accountInfo.amount) : 0;
-            setBalance(voiBalance);
-          }
-        } catch (error) {
-          console.error("Error fetching wallet balance:", error);
-          setBalance(0);
-        }
-      } else {
-        setWalletConnected(false);
-        setWalletAddress('');
-        setBalance(0);
+        setBalance(currentWallet.balance);
+        setWalletAddress(currentWallet.address);
       }
     };
     
@@ -46,40 +24,26 @@ export const useWalletInteraction = () => {
     
     // Set up polling to refresh balance periodically
     const balanceInterval = setInterval(async () => {
-      if (walletConnected && activeAddress) {
-        try {
-          if (getAccountInfo) {
-            const accountInfo = await getAccountInfo(activeAddress);
-            const voiBalance = accountInfo ? 
-              algosdk.microalgosToAlgos(accountInfo.amount) : 0;
-            setBalance(voiBalance);
-          }
-        } catch (error) {
-          console.error("Error refreshing balance:", error);
+      if (walletConnected) {
+        const newBalance = await walletService.refreshBalance();
+        if (newBalance !== null) {
+          setBalance(newBalance);
         }
       }
     }, 30000); // Check every 30 seconds
     
     return () => clearInterval(balanceInterval);
-  }, [activeAddress, activeAccount, isActive, getAccountInfo, walletConnected]);
+  }, [walletConnected]);
 
   const handleConnectWallet = async () => {
-    // This function is mostly for compatibility with the existing codebase
-    // The actual connection is handled by the WalletProvider
-    if (activeAddress) {
-      setWalletConnected(true);
-      setWalletAddress(activeAddress);
-      
-      try {
-        if (activeAccount) {
-          const voiBalance = activeAccount.amount ? 
-            algosdk.microalgosToAlgos(activeAccount.amount) : 0;
-          setBalance(voiBalance);
-        }
-      } catch (error) {
-        console.error("Error fetching wallet balance:", error);
-        setBalance(0);
-      }
+    // Let WalletPanel handle the connection flow
+    setWalletConnected(true);
+    
+    // Update address and balance with actual wallet info
+    const wallet = walletService.getCurrentWallet();
+    if (wallet) {
+      setWalletAddress(wallet.address);
+      setBalance(wallet.balance);
     }
   };
 

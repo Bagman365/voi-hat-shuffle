@@ -21,7 +21,6 @@ const WalletPanel: React.FC<WalletPanelProps> = ({
   isMobile = false
 }) => {
   const {
-    providers,
     isDropdownOpen, 
     setIsDropdownOpen,
     handleWalletConnect,
@@ -29,8 +28,8 @@ const WalletPanel: React.FC<WalletPanelProps> = ({
     handleDisconnect
   } = useWalletPanel();
 
-  const handleConnectSuccess = async (providerId: string) => {
-    const success = await connectWallet(providerId);
+  const handleConnectSuccess = async (provider: any) => {
+    const success = await connectWallet(provider);
     if (success) {
       onConnect();
     }
@@ -57,7 +56,6 @@ const WalletPanel: React.FC<WalletPanelProps> = ({
           handleWalletConnect={handleWalletConnect}
           connectWallet={handleConnectSuccess}
           isMobile={isMobile}
-          providers={providers}
         />
       )}
     </div>

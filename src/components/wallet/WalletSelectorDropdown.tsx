@@ -7,15 +7,15 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { WalletProvider } from '@/services/walletService';
 import { cn } from '@/lib/utils';
 
 interface WalletSelectorDropdownProps {
   isDropdownOpen: boolean;
   setIsDropdownOpen: (open: boolean) => void;
   handleWalletConnect: () => void;
-  connectWallet: (providerId: string) => void;
+  connectWallet: (provider: WalletProvider) => void;
   isMobile?: boolean;
-  providers: any[];
 }
 
 const WalletSelectorDropdown: React.FC<WalletSelectorDropdownProps> = ({
@@ -23,27 +23,15 @@ const WalletSelectorDropdown: React.FC<WalletSelectorDropdownProps> = ({
   setIsDropdownOpen,
   handleWalletConnect,
   connectWallet,
-  isMobile = false,
-  providers
+  isMobile = false
 }) => {
-  // Map wallet IDs to logos
-  const getWalletLogo = (id: string) => {
-    switch (id) {
-      case 'kibisis':
-        return '🟣';
-      case 'lute':
-        return '🟣';
-      case 'pera':
-        return '🔵';
-      case 'walletconnect':
-        return '🔵';
-      default:
-        return '🔵';
-    }
-  };
-
-  // Check if providers is undefined or empty
-  const availableProviders = providers || [];
+  // Wallet options for the dropdown
+  const walletOptions = [
+    { name: 'Kibisis', id: 'kibisis', logo: '🟣' },
+    { name: 'Lute', id: 'lute', logo: '🟣' },
+    { name: 'BiatecWallet', id: 'biatec', logo: '🔵' },
+    { name: 'WalletConnect', id: 'walletconnect', logo: '🔵' },
+  ];
 
   return (
     <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
@@ -75,16 +63,16 @@ const WalletSelectorDropdown: React.FC<WalletSelectorDropdownProps> = ({
           </div>
           
           <div className="space-y-3">
-            {availableProviders.map((provider) => (
-              <div key={provider.metadata.id} className="flex items-center justify-between p-2 rounded-lg hover:bg-purple-900/20 transition-colors">
+            {walletOptions.map((wallet) => (
+              <div key={wallet.id} className="flex items-center justify-between p-2 rounded-lg hover:bg-purple-900/20 transition-colors">
                 <div className="flex items-center gap-3">
                   <div className="flex items-center justify-center w-10 h-10 rounded-full bg-purple-900/30 text-lg">
-                    {getWalletLogo(provider.metadata.id)}
+                    {wallet.logo}
                   </div>
-                  <span className="font-medium">{provider.metadata.name}</span>
+                  <span className="font-medium">{wallet.name}</span>
                 </div>
                 <Button
-                  onClick={() => connectWallet(provider.metadata.id)}
+                  onClick={() => connectWallet(wallet.id as WalletProvider)}
                   variant="outline"
                   size="sm"
                   className="border-purple-500 bg-transparent hover:bg-purple-700/30 rounded-full w-24"
