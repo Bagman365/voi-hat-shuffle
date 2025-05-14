@@ -27,18 +27,20 @@ const VOI_NETWORK = {
 export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
   return (
     <UseWalletProvider
-      wallets={[peraWallet, deflyWallet, daffiWallet]}
-      network={{
-        id: 'voi',
-        algod: {
-          server: VOI_NETWORK.nodeServer,
-          port: VOI_NETWORK.nodePort,
-          token: VOI_NETWORK.nodeToken,
-        },
-        indexer: {
-          server: VOI_NETWORK.indexerServer,
-          port: VOI_NETWORK.indexerPort,
-          token: VOI_NETWORK.indexerToken,
+      value={{
+        wallets: [peraWallet, deflyWallet, daffiWallet],
+        network: {
+          id: 'voi',
+          algod: {
+            server: VOI_NETWORK.nodeServer,
+            port: VOI_NETWORK.nodePort,
+            token: VOI_NETWORK.nodeToken,
+          },
+          indexer: {
+            server: VOI_NETWORK.indexerServer,
+            port: VOI_NETWORK.indexerPort,
+            token: VOI_NETWORK.indexerToken,
+          }
         }
       }}
     >

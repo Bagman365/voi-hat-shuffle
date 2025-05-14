@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { LogOut, Copy, ChevronDown, WalletCards } from 'lucide-react';
@@ -7,7 +6,6 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useWallet } from '@txnlab/use-wallet-react';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 

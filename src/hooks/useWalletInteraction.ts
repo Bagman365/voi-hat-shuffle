@@ -7,31 +7,30 @@ export const useWalletInteraction = () => {
   const [balance, setBalance] = useState<number>(100);
   const { toast } = useToast();
   
+  const wallet = useWallet();
   const { 
     activeAccount,
     activeAddress,
-    isActive,
-    getAlgodClient,
+    activeWallet,
     wallets,
-    disconnect
-  } = useWallet();
+  } = wallet;
 
   // Check if wallet is connected
-  const isConnected = isActive;
+  const isConnected = Boolean(activeWallet && activeAddress);
 
   // Check wallet connection status on load
   useEffect(() => {
     if (isConnected && activeAccount) {
       // Convert microalgos to algos (or in this case, VOI)
-      // The account structure was changed in newer versions
-      const microAlgos = activeAccount.amount ? activeAccount.amount : 0;
+      // Access activeAccount.balance instead of amount
+      const microAlgos = activeAccount.balance || 0;
       setBalance(microAlgos / 1000000);
     }
     
     // Set up polling to refresh balance periodically
     const balanceInterval = setInterval(() => {
       if (isConnected && activeAccount) {
-        const microAlgos = activeAccount.amount ? activeAccount.amount : 0;
+        const microAlgos = activeAccount.balance || 0;
         setBalance(microAlgos / 1000000);
       }
     }, 30000); // Check every 30 seconds
@@ -42,9 +41,9 @@ export const useWalletInteraction = () => {
   const handleConnectWallet = async (walletType?: string) => {
     try {
       if (walletType) {
-        const wallet = wallets.find(w => w.id === walletType);
-        if (wallet) {
-          await wallet.connect();
+        const selectedWallet = wallets.find(w => w.id === walletType);
+        if (selectedWallet) {
+          await selectedWallet.connect();
         }
       }
     } catch (error) {
@@ -65,6 +64,17 @@ export const useWalletInteraction = () => {
     setBalance(prev => prev + amount);
   };
 
+  // Use the built-in disconnect method from the wallet
+  const disconnectWallet = async () => {
+    if (activeWallet) {
+      try {
+        await activeWallet.disconnect();
+      } catch (error) {
+        console.error("Error disconnecting wallet:", error);
+      }
+    }
+  };
+
   return {
     walletConnected: isConnected,
     balance, 
@@ -72,6 +82,6 @@ export const useWalletInteraction = () => {
     handleConnectWallet,
     updateBalanceForWager,
     updateBalanceForWin,
-    disconnectWallet: disconnect
+    disconnectWallet
   };
 };
