@@ -1,49 +1,49 @@
 
 import { useState, useEffect } from 'react';
-import walletService from '@/services/walletService';
+import { useWallet } from '@txnlab/use-wallet-react';
 import { useToast } from '@/hooks/use-toast';
 
 export const useWalletInteraction = () => {
-  const [walletConnected, setWalletConnected] = useState<boolean>(false);
   const [balance, setBalance] = useState<number>(100);
-  const [walletAddress, setWalletAddress] = useState<string>('0x1234...abcd');
   const { toast } = useToast();
+  
+  const { 
+    activeAccount,
+    activeAddress,
+    isConnected,
+    connect,
+    disconnect
+  } = useWallet();
 
   // Check wallet connection status on load
   useEffect(() => {
-    const checkCurrentWallet = async () => {
-      const currentWallet = walletService.getCurrentWallet();
-      if (currentWallet) {
-        setWalletConnected(true);
-        setBalance(currentWallet.balance);
-        setWalletAddress(currentWallet.address);
+    if (isConnected && activeAccount) {
+      if (activeAccount.amount !== undefined) {
+        // Convert from microalgos to algos (or in this case, VOI)
+        setBalance(activeAccount.amount / 1000000);
       }
-    };
-    
-    checkCurrentWallet();
+    }
     
     // Set up polling to refresh balance periodically
-    const balanceInterval = setInterval(async () => {
-      if (walletConnected) {
-        const newBalance = await walletService.refreshBalance();
-        if (newBalance !== null) {
-          setBalance(newBalance);
-        }
+    const balanceInterval = setInterval(() => {
+      if (isConnected && activeAccount && activeAccount.amount !== undefined) {
+        setBalance(activeAccount.amount / 1000000);
       }
     }, 30000); // Check every 30 seconds
     
     return () => clearInterval(balanceInterval);
-  }, [walletConnected]);
+  }, [isConnected, activeAccount]);
 
-  const handleConnectWallet = async () => {
-    // Let WalletPanel handle the connection flow
-    setWalletConnected(true);
-    
-    // Update address and balance with actual wallet info
-    const wallet = walletService.getCurrentWallet();
-    if (wallet) {
-      setWalletAddress(wallet.address);
-      setBalance(wallet.balance);
+  const handleConnectWallet = async (walletType?: string) => {
+    try {
+      await connect(walletType);
+    } catch (error) {
+      console.error("Error connecting wallet:", error);
+      toast({
+        title: "Connection Failed",
+        description: "Could not connect to wallet. Please try again.",
+        variant: "destructive"
+      });
     }
   };
 
@@ -56,11 +56,12 @@ export const useWalletInteraction = () => {
   };
 
   return {
-    walletConnected,
+    walletConnected: isConnected,
     balance, 
-    walletAddress,
+    walletAddress: activeAddress || '0x1234...abcd',
     handleConnectWallet,
     updateBalanceForWager,
-    updateBalanceForWin
+    updateBalanceForWin,
+    disconnectWallet: disconnect
   };
 };

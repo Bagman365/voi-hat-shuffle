@@ -7,7 +7,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import walletService, { WalletProvider } from '@/services/walletService';
+import { useWallet } from '@txnlab/use-wallet-react';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 
@@ -27,13 +27,12 @@ const WalletPanel: React.FC<WalletPanelProps> = ({
   isMobile = false
 }) => {
   const { toast } = useToast();
-  const [walletOptions, setWalletOptions] = useState<{
-    hasVera: boolean;
-    hasKibisis: boolean;
-  }>({
-    hasVera: false,
-    hasKibisis: false
-  });
+  const { 
+    wallets, 
+    disconnect,
+    connect
+  } = useWallet();
+  
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   // Helper function to truncate address for display
@@ -43,28 +42,30 @@ const WalletPanel: React.FC<WalletPanelProps> = ({
   };
 
   const handleWalletConnect = async () => {
-    const providers = await walletService.checkWalletProviders();
-    setWalletOptions(providers);
     setIsDropdownOpen(true);
   };
 
-  const connectWallet = async (provider: WalletProvider) => {
-    if (!provider) return;
-    
-    const walletInfo = await walletService.connectWallet(provider);
-    
-    if (walletInfo) {
+  const connectWallet = async (walletId: string) => {
+    try {
+      await connect(walletId);
       onConnect();
       setIsDropdownOpen(false);
       toast({
-        title: `${walletInfo.name} Connected`,
-        description: `Successfully connected to ${walletInfo.name} wallet.`,
+        title: `Wallet Connected`,
+        description: `Successfully connected to wallet.`,
+      });
+    } catch (error) {
+      console.error("Error connecting wallet:", error);
+      toast({
+        title: "Connection Failed",
+        description: "Could not connect to wallet. Please try again.",
+        variant: "destructive"
       });
     }
   };
 
   const handleDisconnect = async () => {
-    await walletService.disconnect();
+    await disconnect();
     window.location.reload(); // Simple way to reset the app state
   };
 
@@ -75,14 +76,6 @@ const WalletPanel: React.FC<WalletPanelProps> = ({
       description: "Wallet address copied to clipboard",
     });
   };
-
-  // Wallet options for the dropdown
-  const walletOptions1 = [
-    { name: 'Kibisis', id: 'kibisis', logo: '🟣' },
-    { name: 'Lute', id: 'lute', logo: '🟣' },
-    { name: 'BiatecWallet', id: 'biatec', logo: '🔵' },
-    { name: 'WalletConnect', id: 'walletconnect', logo: '🔵' },
-  ];
 
   return (
     <div className={cn(
@@ -116,7 +109,7 @@ const WalletPanel: React.FC<WalletPanelProps> = ({
               <div className="flex items-center justify-between border-b border-purple-500/20 pb-3">
                 <div className="flex items-center gap-2">
                   <div className="w-8 h-8 rounded-full bg-purple-900/70 flex items-center justify-center text-lg">
-                    {walletOptions1.find(w => w.id === 'kibisis')?.logo || '🟣'}
+                    🟣
                   </div>
                   <div>
                     <div className="font-medium">Connected Wallet</div>
@@ -195,16 +188,17 @@ const WalletPanel: React.FC<WalletPanelProps> = ({
               </div>
               
               <div className="space-y-3">
-                {walletOptions1.map((wallet) => (
-                  <div key={wallet.id} className="flex items-center justify-between p-2 rounded-lg hover:bg-purple-900/20 transition-colors">
+                {wallets.map((wallet) => (
+                  <div key={wallet.name} className="flex items-center justify-between p-2 rounded-lg hover:bg-purple-900/20 transition-colors">
                     <div className="flex items-center gap-3">
                       <div className="flex items-center justify-center w-10 h-10 rounded-full bg-purple-900/30 text-lg">
-                        {wallet.logo}
+                        {wallet.name === 'Pera' ? '🟣' : 
+                         wallet.name === 'Defly' ? '🔵' : '🟡'}
                       </div>
                       <span className="font-medium">{wallet.name}</span>
                     </div>
                     <Button
-                      onClick={() => connectWallet(wallet.id as WalletProvider)}
+                      onClick={() => connectWallet(wallet.id)}
                       variant="outline"
                       size="sm"
                       className="border-purple-500 bg-transparent hover:bg-purple-700/30 rounded-full w-24"
