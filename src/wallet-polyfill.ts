@@ -8,10 +8,10 @@ if (typeof window !== 'undefined') {
   window.global = window;
   // Add Buffer to window
   window.Buffer = window.Buffer || Buffer;
-  // Add process to window
+  // Add process to window with correct typing
   window.process = window.process || {
-    env: {},
+    env: {} as Record<string, string>,
     version: '',
-    nextTick: function(cb: any) { setTimeout(cb, 0); }
+    nextTick: function(cb: Function) { setTimeout(cb, 0); }
   };
 }
